@@ -1,9 +1,9 @@
-## Ongoing Sistem Rekam Medis Elektronik Rumah Sakit
+# Ongoing Sistem Rekam Medis Elektronik Rumah Sakit
 
 Sistem dibuat menggunakan Laravel - Filament dengan spa mode, dan beberapa plugin yang saya masukan untuk kedepannya.
 
 Beberapa fitur yang sudah terbuat 
-# Mastering Data
+## Mastering Data
 - Data User
 - Data Pekerjaan/Job User
 - Barang dengan harga
@@ -13,11 +13,11 @@ Beberapa fitur yang sudah terbuat
 - Barang to Ruangan
 - Tindakan to Ruangan
 
-# Pendaftaran
+## Pendaftaran
 - Tambah pasien baru
 - Daftar kunjungan berdasarkan ruangan ( Ongoing )
 
-# Inventory
+## Inventory
 - Barang
 - Vendor
 - Jenis
