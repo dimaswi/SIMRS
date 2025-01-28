@@ -3,30 +3,30 @@
 namespace App\Filament\Admin\Resources\RuanganResource\Pages;
 
 use App\Filament\Admin\Resources\RuanganResource;
-use App\Models\Aplikasi\UserToRuangan;
-use App\Models\Master\Ruangan;
-use App\Models\User;
-use Filament\Forms\Components\Select;
+use App\Models\Aplikasi\TindakanToRuangan;
 use Filament\Resources\Pages\Page;
+use App\Models\Master\Ruangan;
+use App\Models\Master\Tindakan;
+use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
 use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
-use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 
-class UserRuangan extends Page implements HasForms, HasTable
+class TindakanRuangan extends Page implements HasForms, HasTable
 {
     use InteractsWithTable;
     use InteractsWithForms;
 
     protected static string $resource = RuanganResource::class;
 
-    protected static string $view = 'filament.admin.resources.ruangan-resource.pages.user-ruangan';
+    protected static string $view = 'filament.admin.resources.ruangan-resource.pages.tindakan-ruangan';
 
     use HasPageSidebar;
 
@@ -35,7 +35,9 @@ class UserRuangan extends Page implements HasForms, HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(UserToRuangan::where('id_ruangan', $this->record->id))
+            ->query(
+                TindakanToRuangan::where('id_ruangan', $this->record->id)
+            )
             ->columns([
                 TextColumn::make('index')
                     ->alignCenter()
@@ -44,13 +46,9 @@ class UserRuangan extends Page implements HasForms, HasTable
                     ->extraHeaderAttributes([
                         'class' => 'w-1'
                     ]),
-                TextColumn::make('user.nama')
-                    ->label('Nama')
-                    ->searchable(),
-                    TextColumn::make('user.pekerjaanUser.nama_pekerjaan')
-                    ->label('Nama')
-                    ->searchable(),
-                TextColumn::make('ruangan.nama_ruangan'),
+                TextColumn::make('tindakan.nama_tindakan')
+                    ->searchable()
+                    ->label('Nama Tindakan'),
             ])
             ->filters([
                 // ...
@@ -61,17 +59,17 @@ class UserRuangan extends Page implements HasForms, HasTable
             ->bulkActions([
                 // ...
             ])
-            ->emptyStateHeading('Tidak User Ditambahkan')
-            ->emptyStateDescription('Pastikan Menambahkan User pada Tab Pengguna!')
+            ->emptyStateHeading('Tidak Ada Tindakan Ditambahkan')
+            ->emptyStateDescription('Pastikan Menambahkan Tindakan pada Master!')
             ->headerActions([
                 Action::make('tambah')
                     ->icon('heroicon-o-plus-circle')
                     ->color('success')
                     ->form([
-                        Select::make('id_user')
+                        Select::make('id_tindakan')
                             ->label('User')
                             ->options(
-                                User::all()->pluck('nama', 'id')
+                                Tindakan::all()->pluck('nama_tindakan', 'id')
                             )
                             ->searchable()
                             ->required(),
@@ -81,23 +79,23 @@ class UserRuangan extends Page implements HasForms, HasTable
 
                             try {
 
-                                $user = UserToRuangan::where('id_ruangan', $this->record->id)->where('id_user', $data['id_user'])->first();
+                                $user = TindakanToRuangan::where('id_ruangan', $this->record->id)->where('id_tindakan', $data['id_tindakan'])->first();
 
                                 if ($user) {
                                     Notification::make()
                                         ->title('Gagal!')
-                                        ->body('User Sudah Berada Pada Ruangan')
+                                        ->body('Tindakan Sudah ada Pada Ruangan')
                                         ->danger()
                                         ->send();
                                 } else {
-                                    UserToRuangan::create([
-                                        'id_user' => $data['id_user'],
+                                    TindakanToRuangan::create([
+                                        'id_tindakan' => $data['id_tindakan'],
                                         'id_ruangan' => $this->record->id,
                                     ]);
 
                                     Notification::make()
                                         ->title('Berhasil Ditambahkan!')
-                                        ->body('User Berhasil Ditambahkan Kedalam ' . $this->record->nama_ruangan . ' !')
+                                        ->body('Tindakan Berhasil Ditambahkan Kedalam ' . $this->record->nama_ruangan . ' !')
                                         ->success()
                                         ->send();
                                 }
@@ -112,4 +110,5 @@ class UserRuangan extends Page implements HasForms, HasTable
                     )
             ]);
     }
+
 }

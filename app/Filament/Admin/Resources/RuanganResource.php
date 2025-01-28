@@ -110,6 +110,22 @@ class RuanganResource extends Resource
                     ->isActiveWhen(function () {
                         return request()->route()->action['as'] == 'filament.admin.resources.ruangans.user';
                     }),
+                PageNavigationItem::make('Barang Ruangan')
+                    ->url(function () use ($record) {
+                        return static::getUrl('barang', ['record' => $record->id]);
+                    })
+                    ->icon('heroicon-o-inbox-stack')
+                    ->isActiveWhen(function () {
+                        return request()->route()->action['as'] == 'filament.admin.resources.ruangans.barang';
+                    }),
+                PageNavigationItem::make('Tindakan Ruangan')
+                    ->url(function () use ($record) {
+                        return static::getUrl('tindakan', ['record' => $record->id]);
+                    })
+                    ->icon('heroicon-o-clipboard-document-list')
+                    ->isActiveWhen(function () {
+                        return request()->route()->action['as'] == 'filament.admin.resources.ruangans.tindakan';
+                    }),
             ]);
     }
 
@@ -127,6 +143,8 @@ class RuanganResource extends Resource
             'create' => Pages\CreateRuangan::route('/create'),
             'edit' => Pages\EditRuangan::route('/{record}/edit'),
             'user' => Pages\UserRuangan::route('/{record}/user'),
+            'barang' => Pages\BarangRuangan::route('/{record}/barang'),
+            'tindakan' => Pages\TindakanRuangan::route('/{record}/tindakan'),
         ];
     }
 }
