@@ -7,6 +7,7 @@ use App\Models\Master\Pasien;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\MarkdownEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Resources\Pages\Page;
@@ -37,7 +38,7 @@ class PendaftaranPasien extends Page implements HasForms
         return $form
             ->schema([
                 Card::make()->schema([
-                    TextInput::make('nama_lengkap')
+                    Select::make('ruangan')
                 ])
             ])
             ->statePath('data');
