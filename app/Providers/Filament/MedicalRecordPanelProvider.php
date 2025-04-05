@@ -32,8 +32,8 @@ class MedicalRecordPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/RME/Resources'), for: 'App\\Filament\\RME\\Resources')
-            ->discoverPages(in: app_path('Filament/RME/Pages'), for: 'App\\Filament\\RME\\Pages')
+            ->discoverResources(in: app_path('Filament/MedicalRecord/Resources'), for: 'App\\Filament\\MedicalRecord\\Resources')
+            ->discoverPages(in: app_path('Filament/MedicalRecord/Pages'), for: 'App\\Filament\\MedicalRecord\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
