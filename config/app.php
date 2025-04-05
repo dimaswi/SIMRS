@@ -69,7 +69,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Jakarta',
 
     /*
     |--------------------------------------------------------------------------
@@ -197,6 +197,8 @@ return [
         App\Providers\Filament\PendaftaranPanelProvider::class,
         App\Providers\Filament\MasterPanelProvider::class,
         App\Providers\Filament\InventoryPanelProvider::class,
+        App\Providers\Filament\PembayaranPanelProvider::class,
+        App\Providers\Filament\MedicalRecordPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
 
     ],

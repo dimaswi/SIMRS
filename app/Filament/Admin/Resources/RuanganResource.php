@@ -126,6 +126,22 @@ class RuanganResource extends Resource
                     ->isActiveWhen(function () {
                         return request()->route()->action['as'] == 'filament.admin.resources.ruangans.tindakan';
                     }),
+                PageNavigationItem::make('Dokter Ruangan')
+                    ->url(function () use ($record) {
+                        return static::getUrl('dokter', ['record' => $record->id]);
+                    })
+                    ->icon('heroicon-o-user-group')
+                    ->isActiveWhen(function () {
+                        return request()->route()->action['as'] == 'filament.admin.resources.ruangans.dokter';
+                    }),
+                PageNavigationItem::make('Tarif Ruangan')
+                    ->url(function () use ($record) {
+                        return static::getUrl('tarif', ['record' => $record->id]);
+                    })
+                    ->icon('heroicon-o-banknotes')
+                    ->isActiveWhen(function () {
+                        return request()->route()->action['as'] == 'filament.admin.resources.ruangans.tarif';
+                    }),
             ]);
     }
 
@@ -145,6 +161,8 @@ class RuanganResource extends Resource
             'user' => Pages\UserRuangan::route('/{record}/user'),
             'barang' => Pages\BarangRuangan::route('/{record}/barang'),
             'tindakan' => Pages\TindakanRuangan::route('/{record}/tindakan'),
+            'dokter' => Pages\DokterRuangan::route('/{record}/dokter'),
+            'tarif' => Pages\TarifRuangan::route('/{record}/tarif'),
         ];
     }
 }

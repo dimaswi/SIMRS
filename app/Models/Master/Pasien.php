@@ -35,10 +35,10 @@ class Pasien extends Model
         'kelurahan',
     ];
 
-    // public function keluargaPasien()
-    // {
-    //     return $this->belongsTo(KeluargaPasien::class, 'norm', 'norm');
-    // }
+    public function keluargaPasien()
+    {
+        return $this->hasMany(KeluargaPasien::class, 'norm', 'norm');
+    }
 
     public function Kelurahan()
     {
@@ -63,5 +63,10 @@ class Pasien extends Model
     public function getRouteKeyName()
     {
         return 'id';
+    }
+
+    public function kartuIdentitas()
+    {
+        return $this->hasMany(KartuIdentitasPasien::class, 'norm', 'norm');
     }
 }

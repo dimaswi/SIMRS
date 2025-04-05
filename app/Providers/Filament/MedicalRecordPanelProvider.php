@@ -19,25 +19,25 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class InventoryPanelProvider extends PanelProvider
+class MedicalRecordPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('inventory')
-            ->path('inventory')
+            ->id('RME')
+            ->path('RME')
             ->spa()
+            ->topNavigation()
+            ->login(Login::class)
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->spa()
-            ->login(Login::class)
-            ->discoverResources(in: app_path('Filament/Inventory/Resources'), for: 'App\\Filament\\Inventory\\Resources')
-            ->discoverPages(in: app_path('Filament/Inventory/Pages'), for: 'App\\Filament\\Inventory\\Pages')
+            ->discoverResources(in: app_path('Filament/RME/Resources'), for: 'App\\Filament\\RME\\Resources')
+            ->discoverPages(in: app_path('Filament/RME/Pages'), for: 'App\\Filament\\RME\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->discoverWidgets(in: app_path('Filament/Inventory/Widgets'), for: 'App\\Filament\\Inventory\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/RME/Widgets'), for: 'App\\Filament\\RME\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,

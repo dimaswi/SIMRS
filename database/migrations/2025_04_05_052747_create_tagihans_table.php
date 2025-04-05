@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::connection('pendaftaran')->create('pendaftaran', function (Blueprint $table) {
+        Schema::connection('pembayaran')->create('tagihan', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nomor_pendaftaran');
-            $table->string('norm');
-            $table->string('pendaftar');
-            $table->integer('keluarga_pasien');
+            $table->string('pendaftaran_id');
+            $table->string('jenis_tagihan');
+            $table->string('jenis_id');
+            $table->integer('nominal');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::connection('pendaftaran')->dropIfExists('pendaftaran');
+        Schema::connection('pembayaran')->dropIfExists('tagihan');
     }
 };

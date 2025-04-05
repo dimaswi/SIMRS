@@ -3,30 +3,31 @@
 namespace App\Filament\Admin\Resources\RuanganResource\Pages;
 
 use App\Filament\Admin\Resources\RuanganResource;
-use App\Models\Aplikasi\TindakanToRuangan;
+use App\Models\Aplikasi\TarifToRuangan;
 use Filament\Resources\Pages\Page;
 use App\Models\Master\Ruangan;
-use App\Models\Master\Tindakan;
+use App\Models\Master\Tarif;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Contracts\HasForms;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Notifications\Notification;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\DeleteAction;
 
-class TindakanRuangan extends Page implements HasForms, HasTable
+class TarifRuangan extends Page implements HasForms, HasTable
 {
     use InteractsWithTable;
     use InteractsWithForms;
 
     protected static string $resource = RuanganResource::class;
 
-    protected static string $view = 'filament.admin.resources.ruangan-resource.pages.tindakan-ruangan';
+    protected static string $view = 'filament.admin.resources.ruangan-resource.pages.tarif-ruangan';
 
     use HasPageSidebar;
 
@@ -36,7 +37,7 @@ class TindakanRuangan extends Page implements HasForms, HasTable
     {
         return $table
             ->query(
-                TindakanToRuangan::where('id_ruangan', $this->record->id)
+                TarifToRuangan::where('ruangan_id', $this->record->id)
             )
             ->columns([
                 TextColumn::make('index')
@@ -46,9 +47,16 @@ class TindakanRuangan extends Page implements HasForms, HasTable
                     ->extraHeaderAttributes([
                         'class' => 'w-1'
                     ]),
-                TextColumn::make('tindakan.nama_tindakan')
+                TextColumn::make('tarif.nama_tarif')
                     ->searchable()
-                    ->label('Nama Tindakan'),
+                    ->label('Nama Tarif'),
+                    TextColumn::make('tarif.tarif')
+                    ->badge()
+                    ->formatStateUsing(
+                        function (TarifToRuangan $tarif) {
+                            return 'Rp. ' . number_format($tarif->tarif->tarif);
+                        }
+                    )
             ])
             ->filters([
                 // ...
@@ -59,18 +67,17 @@ class TindakanRuangan extends Page implements HasForms, HasTable
             ->bulkActions([
                 // ...
             ])
-            ->emptyStateHeading('Tidak Ada Tindakan Ditambahkan')
-            ->emptyStateDescription('Pastikan Menambahkan Tindakan pada Master!')
+            ->emptyStateHeading('Tidak Ada Tarif Ditambahkan')
+            ->emptyStateDescription('Pastikan Menambahkan Tarif pada Master!')
             ->headerActions([
                 Action::make('tambah')
                     ->icon('heroicon-o-plus-circle')
                     ->color('success')
                     ->form([
-                        Select::make('id_tindakan')
-                            ->label('Tindakan')
-                            ->multiple()
+                        Select::make('tarif_id')
+                            ->label('Tarif')
                             ->options(
-                                Tindakan::all()->pluck('nama_tindakan', 'id')
+                                Tarif::all()->pluck('nama_tarif', 'id')
                             )
                             ->searchable()
                             ->required(),
@@ -80,29 +87,25 @@ class TindakanRuangan extends Page implements HasForms, HasTable
 
                             try {
 
-                                foreach ($data['id_tindakan'] as $key => $value) {
-                                    $user = TindakanToRuangan::where('id_ruangan', $this->record->id)->where('id_tindakan', $value)->first();
-                                    $tindakan = Tindakan::where('id', $value)->first();
+                                $user = TarifToRuangan::where('ruangan_id', $this->record->id)->where('tarif_id', $data['tarif_id'])->first();
 
-                                    if ($user) {
-                                        Notification::make()
-                                            ->title('Gagal!')
-                                            ->body('Tindakan '. $tindakan->nama_tindakan .' Sudah ada Pada Ruangan')
-                                            ->danger()
-                                            ->send();
+                                if ($user) {
+                                    Notification::make()
+                                        ->title('Gagal!')
+                                        ->body('Data Sudah ada Pada Ruangan')
+                                        ->danger()
+                                        ->send();
+                                } else {
+                                    TarifToRuangan::create([
+                                        'tarif_id' => $data['tarif_id'],
+                                        'ruangan_id' => $this->record->id,
+                                    ]);
 
-                                    } else {
-                                        TindakanToRuangan::create([
-                                            'id_tindakan' => $value,
-                                            'id_ruangan' => $this->record->id,
-                                        ]);
-
-                                        Notification::make()
+                                    Notification::make()
                                         ->title('Berhasil Ditambahkan!')
-                                        ->body($tindakan->nama_tindakan .' Berhasil Ditambahkan Kedalam ' . $this->record->nama_ruangan . ' !')
+                                        ->body('Data Berhasil Ditambahkan Kedalam ' . $this->record->nama_ruangan . ' !')
                                         ->success()
                                         ->send();
-                                    }
                                 }
                             } catch (\Throwable $th) {
                                 Notification::make()

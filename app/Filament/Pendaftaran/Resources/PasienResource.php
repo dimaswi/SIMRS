@@ -21,6 +21,7 @@ use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -35,6 +36,7 @@ use Filament\Tables\Columns\Layout\Split;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Icetalker\FilamentTableRepeater\Forms\Components\TableRepeater;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\DB;
@@ -130,6 +132,22 @@ class PasienResource extends Resource
                                 ->columnSpan(2)
                                 ->placeholder('Pendidikan'),
                         ])->columns(8)->collapsible(),
+                    TableRepeater::make('kartu')
+                        ->hiddenOn('edit')
+                        ->label('Kartu Identitas')
+                        ->relationship('kartuIdentitas')
+                        ->schema([
+                            Select::make('jenis_kartu')
+                                ->relationship(name: 'jenisKartu', titleAttribute: 'nama_kartu')
+                                ->createOptionForm([
+                                    Forms\Components\TextInput::make('nama_kartu')
+                                        ->required()
+                                        ->placeholder('Masukan Nama Hubungan'),
+                                ]),
+                            TextInput::make('nomor_kartu')
+                                ->required()
+                                ->placeholder('Masukan Alamat Keluarga Pasien'),
+                        ])->columns(8),
                     Section::make('Alamat Pasien')
                         ->description('Data Tempat Tinggal Pasien')
                         ->schema([
@@ -206,6 +224,32 @@ class PasienResource extends Resource
                                 ->required()
                                 ->columnSpanFull()
                         ])->columns(8)->collapsible(),
+                    Repeater::make('Keluarga')
+                        ->hiddenOn('edit')
+                        ->label('Keluarga Pasien')
+                        ->relationship('keluargaPasien')
+                        ->schema([
+                            TextInput::make('nama_keluarga')
+                                ->required()
+                                ->placeholder('Nama Keluarga')
+                                ->columnSpan(4),
+                            Select::make('hubungan')
+                                ->relationship(name: 'hubunganPasien', titleAttribute: 'nama_hubungan')
+                                ->createOptionForm([
+                                    Forms\Components\TextInput::make('nama_hubungan')
+                                        ->required()
+                                        ->placeholder('Masukan Nama Hubungan'),
+                                ])
+                                ->columnSpan(4),
+                            Textarea::make('alamat')
+                                ->required()
+                                ->placeholder('Masukan Alamat Keluarga Pasien')
+                                ->columnSpanFull(),
+                            TextInput::make('nomor_telepon')
+                                ->required()
+                                ->placeholder('Nomor Telepon')
+                                ->columnSpanFull(),
+                        ])->columns(8)
                     // Section::make('Keluarga Pasien')
                     //     ->relationship('keluargaPasien')
                     //     ->description('Data Keluarga Pasien')
@@ -353,7 +397,7 @@ class PasienResource extends Resource
                             ->searchable()
                             ->weight(FontWeight::Bold)
                             ->formatStateUsing(function ($state, Pasien $pasien) {
-                                return ($pasien->gelar_depan != null ? $pasien->gelar_depan.'.' : '') . $pasien->nama_lengkap. ($pasien->gelar_belakang != null ? ','.$pasien->gelar_belakang : '');
+                                return ($pasien->gelar_depan != null ? $pasien->gelar_depan . '.' : '') . $pasien->nama_lengkap . ($pasien->gelar_belakang != null ? ',' . $pasien->gelar_belakang : '');
                             }),
                         TextColumn::make('norm')
                             ->searchable()
@@ -409,6 +453,22 @@ class PasienResource extends Resource
                     ->isActiveWhen(function () {
                         return request()->route()->action['as'] == 'filament.pendaftaran.resources.pasiens.edit';
                     }),
+                PageNavigationItem::make('Keluarga Pasien')
+                    ->url(function () use ($record) {
+                        return static::getUrl('keluarga', ['record' => $record->id]);
+                    })
+                    ->icon('heroicon-o-user-group')
+                    ->isActiveWhen(function () {
+                        return request()->route()->action['as'] == 'filament.pendaftaran.resources.pasiens.keluarga';
+                    }),
+                PageNavigationItem::make('Identitas Pasien')
+                    ->url(function () use ($record) {
+                        return static::getUrl('identitas', ['record' => $record->id]);
+                    })
+                    ->icon('heroicon-o-identification')
+                    ->isActiveWhen(function () {
+                        return request()->route()->action['as'] == 'filament.pendaftaran.resources.pasiens.identitas';
+                    }),
             ]);
     }
 
@@ -426,6 +486,8 @@ class PasienResource extends Resource
             'create' => Pages\CreatePasien::route('/create'),
             'edit' => Pages\EditPasien::route('/{record}/edit'),
             'daftar' => Pages\PendaftaranPasien::route('/{record}/daftar'),
+            'keluarga' => Pages\KeluargaPasien::route('/{record}/keluarga'),
+            'identitas' => Pages\IdentitasPasien::route('/{record}/identitas'),
         ];
     }
 }

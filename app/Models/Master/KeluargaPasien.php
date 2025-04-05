@@ -17,15 +17,12 @@ class KeluargaPasien extends Model
         'norm',
         'nama_keluarga',
         'hubungan',
-        'tempat_lahir',
-        'tanggal_lahir',
-        'jenis_kelamin',
-        'agama',
         'nomor_telepon',
         'alamat',
-        'provinsi',
-        'kabupaten',
-        'kecamatan',
-        'kelurahan',
     ];
+
+    public function hubunganPasien()
+    {
+        return $this->belongsTo(HubunganPasien::class, 'hubungan', 'id');
+    }
 }

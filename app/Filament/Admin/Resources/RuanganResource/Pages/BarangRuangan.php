@@ -70,42 +70,41 @@ class BarangRuangan extends Page implements HasForms, HasTable
                     ->color('success')
                     ->form([
                         Select::make('id_barang')
-                            ->label('User')
+                            ->label('Barang6')
                             ->options(
                                 Barang::all()->pluck('nama_barang', 'id')
                             )
+                            ->multiple()
                             ->searchable()
                             ->required(),
-                        TextInput::make('stok')
-                            ->label('Stok')
-                            ->numeric()
-                            ->default(0),
                     ])
                     ->action(
                         function (array $data) {
-
                             try {
 
-                                $user = BarangToRuangan::where('id_ruangan', $this->record->id)->where('id_barang', $data['id_barang'])->first();
+                                foreach ($data['id_barang'] as $key => $value) {
+                                    $user = BarangToRuangan::where('id_ruangan', $this->record->id)->where('id_barang', $value)->first();
+                                    $barang = Barang::where('id', $value)->first();
 
-                                if ($user) {
-                                    Notification::make()
-                                        ->title('Gagal!')
-                                        ->body('Tindakan Sudah ada Pada Ruangan')
-                                        ->danger()
-                                        ->send();
-                                } else {
-                                    BarangToRuangan::create([
-                                        'id_barang' => $data['id_barang'],
-                                        'id_ruangan' => $this->record->id,
-                                        'stok' => $data['stok'],
-                                    ]);
+                                    if ($user) {
+                                        Notification::make()
+                                            ->title('Gagal!')
+                                            ->body('Barang '. $barang->nama_barang .' Sudah ada Pada Ruangan')
+                                            ->danger()
+                                            ->send();
+                                    } else {
+                                        BarangToRuangan::create([
+                                            'id_barang' => $value,
+                                            'id_ruangan' => $this->record->id,
+                                            'stok' => 0,
+                                        ]);
 
-                                    Notification::make()
-                                        ->title('Berhasil Ditambahkan!')
-                                        ->body('Barang Berhasil Ditambahkan Kedalam ' . $this->record->nama_ruangan . ' !')
-                                        ->success()
-                                        ->send();
+                                        Notification::make()
+                                            ->title('Berhasil Ditambahkan!')
+                                            ->body($barang->nama_barang.' Berhasil Ditambahkan Kedalam ' . $this->record->nama_ruangan . ' !')
+                                            ->success()
+                                            ->send();
+                                    }
                                 }
                             } catch (\Throwable $th) {
                                 Notification::make()
