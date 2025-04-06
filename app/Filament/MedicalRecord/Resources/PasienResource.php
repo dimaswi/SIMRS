@@ -101,12 +101,66 @@ class PasienResource extends Resource
                     }),
                 PageNavigationItem::make('Tindakan')
                     ->url(function () use ($record) {
-                        return static::getUrl('pemeriksaan', ['record' => $record->id]);
+                        return static::getUrl('tindakan', ['record' => $record->id]);
                     })
                     ->icon('heroicon-o-wrench-screwdriver')
                     ->isActiveWhen(function () {
-                        return request()->route()->action['as'] == 'filament.RME.resources.pasiens.pemeriksaan';
+                        return request()->route()->action['as'] == 'filament.RME.resources.pasiens.tindakan';
                     }),
+                PageNavigationItem::make('Odontogram')
+                    ->url(function () use ($record) {
+                        return static::getUrl('tindakan', ['record' => $record->id]);
+                    })
+                    ->icon('fas-tooth')
+                // ->isActiveWhen(function () {
+                //     return request()->route()->action['as'] == 'filament.RME.resources.pasiens.tindakan';
+                // })
+                ,
+                PageNavigationItem::make('Farmasi')
+                    ->url(function () use ($record) {
+                        return static::getUrl('tindakan', ['record' => $record->id]);
+                    })
+                    ->icon('healthicons-o-pharmacy')
+                // ->isActiveWhen(function () {
+                //     return request()->route()->action['as'] == 'filament.RME.resources.pasiens.tindakan';
+                // })
+                ,
+                PageNavigationItem::make('Laboratorium')
+                    ->url(function () use ($record) {
+                        return static::getUrl('tindakan', ['record' => $record->id]);
+                    })
+                    ->icon('healthicons-f-biochemistry-laboratory')
+                // ->isActiveWhen(function () {
+                //     return request()->route()->action['as'] == 'filament.RME.resources.pasiens.tindakan';
+                // })
+                ,
+                PageNavigationItem::make('Radiologi')
+                    ->url(function () use ($record) {
+                        return static::getUrl('tindakan', ['record' => $record->id]);
+                    })
+                    ->icon('healthicons-f-radiology')
+                // ->isActiveWhen(function () {
+                //     return request()->route()->action['as'] == 'filament.RME.resources.pasiens.tindakan';
+                // })
+                ,
+                PageNavigationItem::make('Surat')
+                    ->url(function () use ($record) {
+                        return static::getUrl('tindakan', ['record' => $record->id]);
+                    })
+                    ->icon('heroicon-o-envelope')
+                // ->isActiveWhen(function () {
+                //     return request()->route()->action['as'] == 'filament.RME.resources.pasiens.tindakan';
+                // })
+                ,
+                PageNavigationItem::make('Pasca Kunjungan')
+                    ->url(function () use ($record) {
+                        return static::getUrl('tindakan', ['record' => $record->id]);
+                    })
+                    ->icon('heroicon-o-home')
+                // ->isActiveWhen(function () {
+                //     return request()->route()->action['as'] == 'filament.RME.resources.pasiens.tindakan';
+                // })
+                ,
             ]);
     }
 
@@ -125,6 +179,7 @@ class PasienResource extends Resource
             // 'edit' => Pages\EditPasien::route('/{record}/edit'),
             'pemeriksaan' => Pages\PemeriksaanPasien::route('/{record}/pemeriksaan'),
             'diagnosa' => Pages\DiagnosaPasien::route('/{record}/diagnosa'),
+            'tindakan' => Pages\TindakanPasien::route('/{record}/tindakan'),
         ];
     }
 }

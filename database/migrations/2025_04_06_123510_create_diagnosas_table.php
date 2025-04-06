@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::connection('rekam_medis')->create('diagnosa', function (Blueprint $table) {
             $table->id();
             $table->string('kunjungan_id');
-            $table->string('code');
-            $table->string('display');
+            $table->string('diagnosa_id');
             $table->string('keterangan');
             $table->string('kategori');
             $table->string('tanggal');

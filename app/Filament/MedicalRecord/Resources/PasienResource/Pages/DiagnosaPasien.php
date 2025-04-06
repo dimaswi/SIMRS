@@ -8,6 +8,7 @@ use App\Models\MedicalRecord\Diagnosa;
 use App\Models\Pendaftaran\Kunjungan;
 use Filament\Resources\Pages\Page;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
+use Carbon\Carbon;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;
@@ -19,11 +20,14 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\DB;
 
 class DiagnosaPasien extends Page implements HasForms, HasTable
 {
@@ -50,7 +54,7 @@ class DiagnosaPasien extends Page implements HasForms, HasTable
                     ->extraHeaderAttributes([
                         'class' => 'w-1'
                     ]),
-                TextColumn::make('code')
+                TextColumn::make('diagnosa.code')
                     ->label('Kode')
                     ->alignCenter()
                     ->badge()
@@ -64,7 +68,7 @@ class DiagnosaPasien extends Page implements HasForms, HasTable
                     ->extraHeaderAttributes([
                         'class' => 'w-1'
                     ]),
-                TextColumn::make('keterangan'),
+                TextColumn::make('diagnosa.display'),
             ])
             ->emptyStateHeading('Tidak Ada Diagnosa Ditambahkan')
             ->emptyStateDescription('Pastikan Menambahkan ICD 10 pada Master!')
@@ -72,7 +76,7 @@ class DiagnosaPasien extends Page implements HasForms, HasTable
                 // ...
             ])
             ->actions([
-                // ...
+                DeleteAction::make()
             ])
             ->bulkActions([
                 // ...
@@ -82,22 +86,80 @@ class DiagnosaPasien extends Page implements HasForms, HasTable
                     ->icon('heroicon-o-plus-circle')
                     ->color('success')
                     ->form([
-                        Select::make('diagnosa_id')
+                        Select::make('diagnosa')
                             ->label('Diagnosa')
-                            ->searchDebounce(1000)
-                            ->options(
-                                function (callable $get) {
-                                    $diagnosa = ICD10::where('code', '!=', null)
-                                        ->get()
-                                        ->mapWithKeys(function ($diagnosa) {
-                                            return [$diagnosa->id => $diagnosa->code . " ( " . $diagnosa->display . " ) "];
-                                        })->toArray();
-                                    return $diagnosa;
-                                }
-                            )
+                            ->getSearchResultsUsing(
+                                function (string $search) {
+                                    return ICD10::where('code', 'like', "%{$search}%")
+                                    ->limit(50)
+                                    ->get()
+                                    ->mapWithKeys(function ($diagnosa) {
+                                        return [$diagnosa->id => $diagnosa->code . " ( " . $diagnosa->display . " ) "];
+                                    })
+                                    ->toArray();
+                            })
+                            // ->options(
+                            //     function (callable $get) {
+                            //         $diagnosa = ICD10::where('code', '!=', null)
+                            //             ->get()
+                            //             ->mapWithKeys(function ($diagnosa) {
+                            //                 return [$diagnosa->id => $diagnosa->code . " ( " . $diagnosa->display . " ) "];
+                            //             })->toArray();
+                            //         return $diagnosa;
+                            //     }
+                            // )
                             ->searchable()
                             ->required(),
+                        Select::make('kategori')
+                            ->required()
+                            ->searchable()
+                            ->options([
+                                'Primary' => 'Primary',
+                                'Secondary' => 'Secondary',
+                            ]),
+                        TextInput::make('keterangan')
+                            ->default('Tidak ada')
+                            ->required()
                     ])
+                    ->action(
+                        function (array $data) {
+                            try {
+                                $primary_diagnosa = Diagnosa::where('kunjungan_id', $this->record->id)->where('kategori', 'Primary')->first();
+
+                                if ($primary_diagnosa && $data['kategori'] === 'Primary') {
+                                    Notification::make()
+                                        ->title('Gagal!')
+                                        ->body('Diagnosa Primer Sudah Ada, Silahkan Hapus atau Tambahkan ke Diagnosa Sekunder!')
+                                        ->danger()
+                                        ->send();
+                                } else {
+                                    DB::beginTransaction();
+                                    Diagnosa::create([
+                                        'kunjungan_id' => $this->record->id,
+                                        'diagnosa_id' => $data['diagnosa'],
+                                        'keterangan' => $data['keterangan'],
+                                        'kategori' => $data['kategori'],
+                                        'tanggal' => Carbon::now('Asia/Jakarta'),
+                                        'petugas' => auth()->user()->id,
+                                    ]);
+                                    DB::commit();
+
+                                    Notification::make()
+                                        ->title('Berhasil!')
+                                        ->body('Data Diagnosa Berhasil Disimpan!')
+                                        ->success()
+                                        ->send();
+                                }
+                            } catch (\Throwable $th) {
+                                DB::rollBack();
+                                Notification::make()
+                                    ->title('Gagal!')
+                                    ->body($th->getMessage())
+                                    ->danger()
+                                    ->send();
+                            }
+                        }
+                    )
             ]);
     }
 }
