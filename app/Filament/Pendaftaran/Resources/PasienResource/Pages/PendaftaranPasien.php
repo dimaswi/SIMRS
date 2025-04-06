@@ -85,30 +85,32 @@ class PendaftaranPasien extends Page implements HasForms
             $pendaftaran = Pendaftaran::where('norm', $this->record->norm)->first();
             $ruangan = Ruangan::where('id', $this->form->getState()['ruangan'])->first();
             $available_data = Pendaftaran::where('norm', $this->record->norm)
-            ->with('daf_kunjungan', function($query) {
-                $query->where('final', null);
-            })
-            ->get();
+                ->with('daf_kunjungan', function ($query) {
+                    $query->where('final', null);
+                })
+                ->get();
             $tarif_ruangan = TarifToRuangan::where('ruangan_id', $this->form->getState()['ruangan'])->with(['tarif', 'ruangan'])->first();
 
             if ($available_data != null || $tarif_ruangan == null) {
                 if ($available_data != null) {
                     Notification::make()
-                    ->title('Gagal!')
-                    ->body($this->record->nama_lengkap . ' masih memiliki kunjungan yang belum difinal!')
-                    ->danger()
-                    ->send();
+                        ->title('Gagal!')
+                        ->body($this->record->nama_lengkap . ' masih memiliki kunjungan yang belum difinal!')
+                        ->danger()
+                        ->send();
                 }
 
                 if ($tarif_ruangan == null) {
                     Notification::make()
-                    ->title('Gagal!')
-                    ->body('Ruangan belum memiliki tarif administrasi!')
-                    ->danger()
-                    ->send();
+                        ->title('Gagal!')
+                        ->body('Ruangan belum memiliki tarif administrasi!')
+                        ->danger()
+                        ->send();
                 }
             } else {
                 $dokter = DokterToRuangan::where('id', $this->form->getState()['dokter_ruangan'])->first();
+
+                DB::beginTransaction();
                 $daf = Pendaftaran::create([
                     'norm' => $this->record->norm,
                     'pendaftar' => auth()->user()->id,
@@ -128,6 +130,7 @@ class PendaftaranPasien extends Page implements HasForms
                     'nominal' => $tarif_ruangan->tarif->tarif,
                     'jumlah' => 1,
                 ]);
+                DB::commit();
 
                 Notification::make()
                     ->title('Berhasil!')
@@ -138,6 +141,7 @@ class PendaftaranPasien extends Page implements HasForms
                 return redirect('pendaftaran/pasiens');
             }
         } catch (\Throwable $th) {
+            DB::rollBack();
             Notification::make()
                 ->title('Gagal!')
                 ->body($th->getMessage())

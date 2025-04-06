@@ -39,11 +39,11 @@ class PasienResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-        ->recordUrl(
-            function (Kunjungan $pasien) {
-                return static::getUrl('pemeriksaan', ['record' => $pasien->id]);
-            }
-        )
+            ->recordUrl(
+                function (Kunjungan $pasien) {
+                    return static::getUrl('pemeriksaan', ['record' => $pasien->id]);
+                }
+            )
             ->modifyQueryUsing(
                 function (Builder $query) {
                     return $query->where('final', null);
@@ -83,11 +83,27 @@ class PasienResource extends Resource
     {
         return FilamentPageSidebar::make()
             ->setNavigationItems([
+                PageNavigationItem::make('Diagnosa Pasien')
+                    ->url(function () use ($record) {
+                        return static::getUrl('diagnosa', ['record' => $record->id]);
+                    })
+                    ->icon('heroicon-o-paper-clip')
+                    ->isActiveWhen(function () {
+                        return request()->route()->action['as'] == 'filament.RME.resources.pasiens.diagnosa';
+                    }),
                 PageNavigationItem::make('Pemeriksaan Umum')
                     ->url(function () use ($record) {
                         return static::getUrl('pemeriksaan', ['record' => $record->id]);
                     })
                     ->icon('heroicon-o-clipboard-document-list')
+                    ->isActiveWhen(function () {
+                        return request()->route()->action['as'] == 'filament.RME.resources.pasiens.pemeriksaan';
+                    }),
+                PageNavigationItem::make('Tindakan')
+                    ->url(function () use ($record) {
+                        return static::getUrl('pemeriksaan', ['record' => $record->id]);
+                    })
+                    ->icon('heroicon-o-wrench-screwdriver')
                     ->isActiveWhen(function () {
                         return request()->route()->action['as'] == 'filament.RME.resources.pasiens.pemeriksaan';
                     }),
@@ -108,6 +124,7 @@ class PasienResource extends Resource
             'create' => Pages\CreatePasien::route('/create'),
             // 'edit' => Pages\EditPasien::route('/{record}/edit'),
             'pemeriksaan' => Pages\PemeriksaanPasien::route('/{record}/pemeriksaan'),
+            'diagnosa' => Pages\DiagnosaPasien::route('/{record}/diagnosa'),
         ];
     }
 }

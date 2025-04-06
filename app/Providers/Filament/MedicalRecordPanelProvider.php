@@ -27,6 +27,7 @@ class MedicalRecordPanelProvider extends PanelProvider
             ->id('RME')
             ->path('RME')
             ->spa()
+            ->breadcrumbs(false)
             ->topNavigation()
             ->login(Login::class)
             ->colors([
