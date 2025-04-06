@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               8.4.0 - MySQL Community Server - GPL
+-- Server version:               9.2.0 - MySQL Community Server - GPL
 -- Server OS:                    Win64
 -- HeidiSQL Version:             12.1.0.6537
 -- --------------------------------------------------------
@@ -16,40 +16,43 @@
 
 
 -- Dumping database structure for aplikasi
+DROP DATABASE IF EXISTS `aplikasi`;
 CREATE DATABASE IF NOT EXISTS `aplikasi` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `aplikasi`;
 
 -- Dumping structure for table aplikasi.barang_to_ruangan
+DROP TABLE IF EXISTS `barang_to_ruangan`;
 CREATE TABLE IF NOT EXISTS `barang_to_ruangan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `id_barang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_ruangan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_barang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_ruangan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `stok` int NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table aplikasi.barang_to_ruangan: ~0 rows (approximately)
-INSERT INTO `barang_to_ruangan` (`id`, `id_barang`, `id_ruangan`, `stok`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table aplikasi.barang_to_ruangan: ~2 rows (approximately)
+REPLACE INTO `barang_to_ruangan` (`id`, `id_barang`, `id_ruangan`, `stok`, `created_at`, `updated_at`) VALUES
 	(2, '1', '1', 0, '2025-04-04 22:43:52', '2025-04-04 22:43:52'),
 	(3, '1', '2', 0, '2025-04-05 09:40:41', '2025-04-05 09:40:41');
 
 -- Dumping structure for table aplikasi.dokter_to_ruangan
+DROP TABLE IF EXISTS `dokter_to_ruangan`;
 CREATE TABLE IF NOT EXISTS `dokter_to_ruangan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ruangan_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `jadwal` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `jam_buka` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `jam_tutup` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ruangan_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jadwal` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jam_buka` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jam_tutup` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table aplikasi.dokter_to_ruangan: ~0 rows (approximately)
-INSERT INTO `dokter_to_ruangan` (`id`, `user_id`, `ruangan_id`, `jadwal`, `jam_buka`, `jam_tutup`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table aplikasi.dokter_to_ruangan: ~6 rows (approximately)
+REPLACE INTO `dokter_to_ruangan` (`id`, `user_id`, `ruangan_id`, `jadwal`, `jam_buka`, `jam_tutup`, `created_at`, `updated_at`) VALUES
 	(1, '2', '1', 'Senin', '07:30', '14:30', '2025-04-04 20:29:51', '2025-04-04 20:29:51'),
 	(2, '2', '1', 'Selasa', '07:00', '14:00', '2025-04-04 20:33:59', '2025-04-04 20:33:59'),
 	(3, '2', '1', 'Rabu', '07:00', '14:00', '2025-04-04 20:34:21', '2025-04-04 20:34:21'),
@@ -58,13 +61,14 @@ INSERT INTO `dokter_to_ruangan` (`id`, `user_id`, `ruangan_id`, `jadwal`, `jam_b
 	(6, '2', '2', 'Sabtu', '09:00', '17:00', '2025-04-05 09:24:22', '2025-04-05 09:24:22');
 
 -- Dumping structure for table aplikasi.failed_jobs
+DROP TABLE IF EXISTS `failed_jobs`;
 CREATE TABLE IF NOT EXISTS `failed_jobs` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `uuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
@@ -73,15 +77,16 @@ CREATE TABLE IF NOT EXISTS `failed_jobs` (
 -- Dumping data for table aplikasi.failed_jobs: ~0 rows (approximately)
 
 -- Dumping structure for table aplikasi.migrations
+DROP TABLE IF EXISTS `migrations`;
 CREATE TABLE IF NOT EXISTS `migrations` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table aplikasi.migrations: ~27 rows (approximately)
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+-- Dumping data for table aplikasi.migrations: ~33 rows (approximately)
+REPLACE INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(1, '2014_10_12_000000_create_users_table', 1),
 	(2, '2014_10_12_100000_create_password_reset_tokens_table', 1),
 	(3, '2019_08_19_000000_create_failed_jobs_table', 1),
@@ -117,9 +122,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 	(34, '2025_04_05_052747_create_tagihans_table', 18);
 
 -- Dumping structure for table aplikasi.password_reset_tokens
+DROP TABLE IF EXISTS `password_reset_tokens`;
 CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -127,13 +133,14 @@ CREATE TABLE IF NOT EXISTS `password_reset_tokens` (
 -- Dumping data for table aplikasi.password_reset_tokens: ~0 rows (approximately)
 
 -- Dumping structure for table aplikasi.personal_access_tokens
+DROP TABLE IF EXISTS `personal_access_tokens`;
 CREATE TABLE IF NOT EXISTS `personal_access_tokens` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tokenable_id` bigint unsigned NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -146,32 +153,34 @@ CREATE TABLE IF NOT EXISTS `personal_access_tokens` (
 -- Dumping data for table aplikasi.personal_access_tokens: ~0 rows (approximately)
 
 -- Dumping structure for table aplikasi.tarif_to_ruangan
+DROP TABLE IF EXISTS `tarif_to_ruangan`;
 CREATE TABLE IF NOT EXISTS `tarif_to_ruangan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `ruangan_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tarif_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ruangan_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tarif_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table aplikasi.tarif_to_ruangan: ~1 rows (approximately)
-INSERT INTO `tarif_to_ruangan` (`id`, `ruangan_id`, `tarif_id`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table aplikasi.tarif_to_ruangan: ~2 rows (approximately)
+REPLACE INTO `tarif_to_ruangan` (`id`, `ruangan_id`, `tarif_id`, `created_at`, `updated_at`) VALUES
 	(3, '1', '2', '2025-04-05 06:45:56', '2025-04-05 06:45:56'),
 	(4, '2', '2', '2025-04-05 09:24:31', '2025-04-05 09:24:31');
 
 -- Dumping structure for table aplikasi.tindakan_to_ruangan
+DROP TABLE IF EXISTS `tindakan_to_ruangan`;
 CREATE TABLE IF NOT EXISTS `tindakan_to_ruangan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `id_tindakan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_ruangan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_tindakan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_ruangan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table aplikasi.tindakan_to_ruangan: ~2 rows (approximately)
-INSERT INTO `tindakan_to_ruangan` (`id`, `id_tindakan`, `id_ruangan`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table aplikasi.tindakan_to_ruangan: ~12 rows (approximately)
+REPLACE INTO `tindakan_to_ruangan` (`id`, `id_tindakan`, `id_ruangan`, `created_at`, `updated_at`) VALUES
 	(4, '5', '1', '2025-04-04 22:16:28', '2025-04-04 22:16:28'),
 	(5, '4', '1', '2025-04-04 22:16:28', '2025-04-04 22:16:28'),
 	(6, '7', '1', '2025-04-04 22:16:28', '2025-04-04 22:16:28'),
@@ -186,13 +195,14 @@ INSERT INTO `tindakan_to_ruangan` (`id`, `id_tindakan`, `id_ruangan`, `created_a
 	(15, '7', '2', '2025-04-05 09:40:31', '2025-04-05 09:40:31');
 
 -- Dumping structure for table aplikasi.users
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `nip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `pekerjaan` tinyint DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -200,36 +210,39 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table aplikasi.users: ~2 rows (approximately)
-INSERT INTO `users` (`id`, `nama`, `nip`, `pekerjaan`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `users` (`id`, `nama`, `nip`, `pekerjaan`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
 	(1, 'dimas', '2023.01.12.162', 1, '$2y$10$olxMI/dJMxTCfN6A1A22f.B9CthrrRZ4V.Te3w8d6qSHNOF3NsCAS', NULL, '2025-01-27 00:39:17', '2025-01-27 20:26:06'),
 	(2, 'David', '2020.05.13.123', 2, '$2y$10$U5H/JPoDOgcvvA32wsYEG.WQVum9O2ZROGn5tvFYooBp6eKUUNQSy', NULL, '2025-01-27 00:55:29', '2025-01-27 19:16:46');
 
 -- Dumping structure for table aplikasi.user_to_ruangan
+DROP TABLE IF EXISTS `user_to_ruangan`;
 CREATE TABLE IF NOT EXISTS `user_to_ruangan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `id_user` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `id_ruangan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_user` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_ruangan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table aplikasi.user_to_ruangan: ~2 rows (approximately)
-INSERT INTO `user_to_ruangan` (`id`, `id_user`, `id_ruangan`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table aplikasi.user_to_ruangan: ~3 rows (approximately)
+REPLACE INTO `user_to_ruangan` (`id`, `id_user`, `id_ruangan`, `created_at`, `updated_at`) VALUES
 	(8, '1', '1', '2025-01-27 20:13:52', '2025-01-27 20:13:52'),
 	(9, '2', '1', '2025-01-27 23:08:50', '2025-01-27 23:08:50'),
 	(10, '2', '2', '2025-04-05 09:24:36', '2025-04-05 09:24:36');
 
 
 -- Dumping database structure for inventory
+DROP DATABASE IF EXISTS `inventory`;
 CREATE DATABASE IF NOT EXISTS `inventory` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `inventory`;
 
 -- Dumping structure for table inventory.barang
+DROP TABLE IF EXISTS `barang`;
 CREATE TABLE IF NOT EXISTS `barang` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_barang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `merk` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_barang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `merk` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `harga_beli` int NOT NULL,
   `harga_jual` int NOT NULL,
   `stok_minimum` int NOT NULL,
@@ -237,43 +250,45 @@ CREATE TABLE IF NOT EXISTS `barang` (
   `kategori` tinyint NOT NULL,
   `satuan` tinyint NOT NULL,
   `vendor` tinyint NOT NULL,
-  `generik` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
-  `jenis_penggunaan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `generik` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `jenis_penggunaan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table inventory.barang: ~0 rows (approximately)
-INSERT INTO `barang` (`id`, `nama_barang`, `merk`, `harga_beli`, `harga_jual`, `stok_minimum`, `jenis`, `kategori`, `satuan`, `vendor`, `generik`, `jenis_penggunaan`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table inventory.barang: ~1 rows (approximately)
+REPLACE INTO `barang` (`id`, `nama_barang`, `merk`, `harga_beli`, `harga_jual`, `stok_minimum`, `jenis`, `kategori`, `satuan`, `vendor`, `generik`, `jenis_penggunaan`, `created_at`, `updated_at`) VALUES
 	(1, 'Paracetamol', 'PCTM', 520, 1000, 100, 1, 1, 1, 1, '-', 'Obat Dalam', '2025-01-27 21:58:29', '2025-01-27 21:58:29');
 
 -- Dumping structure for table inventory.jenis_barang
+DROP TABLE IF EXISTS `jenis_barang`;
 CREATE TABLE IF NOT EXISTS `jenis_barang` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_jenis_barang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_jenis_barang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table inventory.jenis_barang: ~4 rows (approximately)
-INSERT INTO `jenis_barang` (`id`, `nama_jenis_barang`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table inventory.jenis_barang: ~3 rows (approximately)
+REPLACE INTO `jenis_barang` (`id`, `nama_jenis_barang`, `created_at`, `updated_at`) VALUES
 	(1, 'Obat', '2025-01-27 21:19:37', '2025-01-27 21:19:37'),
 	(2, 'Alkes', '2025-01-27 21:19:40', '2025-01-27 21:19:40'),
 	(3, 'Jasa', '2025-01-27 21:19:42', '2025-01-27 21:19:42');
 
 -- Dumping structure for table inventory.kategori_barang
+DROP TABLE IF EXISTS `kategori_barang`;
 CREATE TABLE IF NOT EXISTS `kategori_barang` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_kategori_barang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_kategori_barang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table inventory.kategori_barang: ~5 rows (approximately)
-INSERT INTO `kategori_barang` (`id`, `nama_kategori_barang`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `kategori_barang` (`id`, `nama_kategori_barang`, `created_at`, `updated_at`) VALUES
 	(1, 'Tablet', '2025-01-27 21:19:57', '2025-01-27 21:19:57'),
 	(2, 'Injeksi', '2025-01-27 21:20:00', '2025-01-27 21:20:00'),
 	(3, 'Cairan', '2025-01-27 21:20:04', '2025-01-27 21:20:04'),
@@ -281,52 +296,56 @@ INSERT INTO `kategori_barang` (`id`, `nama_kategori_barang`, `created_at`, `upda
 	(5, 'Barang Habis Pakai', '2025-01-27 21:20:14', '2025-01-27 21:20:14');
 
 -- Dumping structure for table inventory.satuan_barang
+DROP TABLE IF EXISTS `satuan_barang`;
 CREATE TABLE IF NOT EXISTS `satuan_barang` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_satuan_barang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_satuan_barang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table inventory.satuan_barang: ~4 rows (approximately)
-INSERT INTO `satuan_barang` (`id`, `nama_satuan_barang`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `satuan_barang` (`id`, `nama_satuan_barang`, `created_at`, `updated_at`) VALUES
 	(1, 'Ampul', '2025-01-27 21:18:44', '2025-01-27 21:18:44'),
 	(2, 'Bag', '2025-01-27 21:18:46', '2025-01-27 21:18:46'),
 	(3, 'Biji', '2025-01-27 21:18:49', '2025-01-27 21:18:49'),
 	(4, 'Pcs', '2025-01-27 21:18:52', '2025-01-27 21:18:52');
 
 -- Dumping structure for table inventory.vendor_barang
+DROP TABLE IF EXISTS `vendor_barang`;
 CREATE TABLE IF NOT EXISTS `vendor_barang` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_vendor` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `alamat` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_vendor` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alamat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `nomor_telefon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table inventory.vendor_barang: ~0 rows (approximately)
-INSERT INTO `vendor_barang` (`id`, `nama_vendor`, `alamat`, `nomor_telefon`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table inventory.vendor_barang: ~1 rows (approximately)
+REPLACE INTO `vendor_barang` (`id`, `nama_vendor`, `alamat`, `nomor_telefon`, `created_at`, `updated_at`) VALUES
 	(1, 'PT WIRA WIRI', 'Jalan Jalan Jauh Nomor 11', '0897163528', '2025-01-27 21:09:38', '2025-01-27 21:09:38');
 
 
 -- Dumping database structure for master
+DROP DATABASE IF EXISTS `master`;
 CREATE DATABASE IF NOT EXISTS `master` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `master`;
 
 -- Dumping structure for table master.agama
+DROP TABLE IF EXISTS `agama`;
 CREATE TABLE IF NOT EXISTS `agama` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_agama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_agama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table master.agama: ~6 rows (approximately)
-INSERT INTO `agama` (`id`, `nama_agama`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `agama` (`id`, `nama_agama`, `created_at`, `updated_at`) VALUES
 	(1, 'Islam', '2025-01-27 02:02:29', '2025-01-27 02:02:29'),
 	(2, 'Kristen Khatolik', '2025-01-27 02:02:35', '2025-01-27 02:02:35'),
 	(3, 'Kristen Protestan', '2025-01-27 02:02:41', '2025-01-27 02:02:41'),
@@ -335,65 +354,70 @@ INSERT INTO `agama` (`id`, `nama_agama`, `created_at`, `updated_at`) VALUES
 	(6, 'Budha', '2025-01-27 02:02:57', '2025-01-27 02:02:57');
 
 -- Dumping structure for table master.hubungan_pasien
+DROP TABLE IF EXISTS `hubungan_pasien`;
 CREATE TABLE IF NOT EXISTS `hubungan_pasien` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_hubungan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_hubungan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table master.hubungan_pasien: ~4 rows (approximately)
-INSERT INTO `hubungan_pasien` (`id`, `nama_hubungan`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `hubungan_pasien` (`id`, `nama_hubungan`, `created_at`, `updated_at`) VALUES
 	(1, 'Orang Tua', '2025-02-24 08:29:15', '2025-02-24 08:29:15'),
 	(2, 'Anak', '2025-02-24 08:29:30', '2025-02-24 08:29:30'),
 	(3, 'Suami', '2025-02-24 08:29:33', '2025-02-24 08:29:33'),
 	(4, 'Istri', '2025-02-24 08:29:37', '2025-02-24 08:29:37');
 
 -- Dumping structure for table master.jenis_kartu_identitas
+DROP TABLE IF EXISTS `jenis_kartu_identitas`;
 CREATE TABLE IF NOT EXISTS `jenis_kartu_identitas` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_kartu` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_kartu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table master.jenis_kartu_identitas: ~2 rows (approximately)
-INSERT INTO `jenis_kartu_identitas` (`id`, `nama_kartu`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `jenis_kartu_identitas` (`id`, `nama_kartu`, `created_at`, `updated_at`) VALUES
 	(1, 'Kartu Tanda Penduduk (KTP)', '2025-02-24 08:37:34', '2025-02-24 08:37:34'),
 	(2, 'Surat Izin Mengemudi (SIM)', '2025-02-24 08:37:46', '2025-02-24 08:37:46');
 
 -- Dumping structure for table master.jenis_kelamin
+DROP TABLE IF EXISTS `jenis_kelamin`;
 CREATE TABLE IF NOT EXISTS `jenis_kelamin` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_jenis_kelamin` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_jenis_kelamin` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table master.jenis_kelamin: ~2 rows (approximately)
-INSERT INTO `jenis_kelamin` (`id`, `nama_jenis_kelamin`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `jenis_kelamin` (`id`, `nama_jenis_kelamin`, `created_at`, `updated_at`) VALUES
 	(1, 'Perempuan', '2025-01-27 02:03:08', '2025-01-27 02:03:08'),
 	(2, 'Laki - Laki', '2025-01-27 02:03:13', '2025-01-27 02:03:13');
 
 -- Dumping structure for table master.jenis_kunjungan
+DROP TABLE IF EXISTS `jenis_kunjungan`;
 CREATE TABLE IF NOT EXISTS `jenis_kunjungan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_kunjungan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_kunjungan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table master.jenis_kunjungan: ~2 rows (approximately)
-INSERT INTO `jenis_kunjungan` (`id`, `nama_kunjungan`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table master.jenis_kunjungan: ~3 rows (approximately)
+REPLACE INTO `jenis_kunjungan` (`id`, `nama_kunjungan`, `created_at`, `updated_at`) VALUES
 	(1, 'Rawat Jalan', '2025-01-27 18:54:33', '2025-01-27 18:54:33'),
 	(2, 'Rawat Inap', '2025-01-27 18:54:36', '2025-01-27 18:54:36'),
 	(3, 'Gawat Darurat', '2025-01-27 18:54:41', '2025-01-27 18:54:41');
 
 -- Dumping structure for table master.kabupaten
+DROP TABLE IF EXISTS `kabupaten`;
 CREATE TABLE IF NOT EXISTS `kabupaten` (
   `id` char(4) NOT NULL,
   `province_id` char(2) NOT NULL,
@@ -404,7 +428,7 @@ CREATE TABLE IF NOT EXISTS `kabupaten` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table master.kabupaten: ~514 rows (approximately)
-INSERT INTO `kabupaten` (`id`, `province_id`, `name`) VALUES
+REPLACE INTO `kabupaten` (`id`, `province_id`, `name`) VALUES
 	('1101', '11', 'KAB. ACEH SELATAN'),
 	('1102', '11', 'KAB. ACEH TENGGARA'),
 	('1103', '11', 'KAB. ACEH TIMUR'),
@@ -921,23 +945,25 @@ INSERT INTO `kabupaten` (`id`, `province_id`, `name`) VALUES
 	('9508', '95', 'KAB. NDUGA');
 
 -- Dumping structure for table master.kartu_identitas_pasien
+DROP TABLE IF EXISTS `kartu_identitas_pasien`;
 CREATE TABLE IF NOT EXISTS `kartu_identitas_pasien` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `norm` int DEFAULT NULL,
-  `jenis_kartu` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nomor_kartu` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_kartu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nomor_kartu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table master.kartu_identitas_pasien: ~2 rows (approximately)
-INSERT INTO `kartu_identitas_pasien` (`id`, `norm`, `jenis_kartu`, `nomor_kartu`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table master.kartu_identitas_pasien: ~3 rows (approximately)
+REPLACE INTO `kartu_identitas_pasien` (`id`, `norm`, `jenis_kartu`, `nomor_kartu`, `created_at`, `updated_at`) VALUES
 	(1, 1, '1', '3622061101010001', '2025-02-24 08:41:12', '2025-02-24 08:41:12'),
 	(2, 1, '1', '0192830192', '2025-02-24 08:41:12', '2025-02-24 08:41:12'),
 	(3, 1, '1', '1231234124124', '2025-02-24 09:22:12', '2025-02-24 09:22:12');
 
 -- Dumping structure for table master.kecamatan
+DROP TABLE IF EXISTS `kecamatan`;
 CREATE TABLE IF NOT EXISTS `kecamatan` (
   `id` char(6) NOT NULL,
   `regency_id` char(4) NOT NULL,
@@ -947,8 +973,8 @@ CREATE TABLE IF NOT EXISTS `kecamatan` (
   CONSTRAINT `fk_regency` FOREIGN KEY (`regency_id`) REFERENCES `kabupaten` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table master.kecamatan: ~7.205 rows (approximately)
-INSERT INTO `kecamatan` (`id`, `regency_id`, `name`) VALUES
+-- Dumping data for table master.kecamatan: ~7.554 rows (approximately)
+REPLACE INTO `kecamatan` (`id`, `regency_id`, `name`) VALUES
 	('110101', '1101', 'Bakongan'),
 	('110102', '1101', 'Kluet Utara'),
 	('110103', '1101', 'Kluet Selatan'),
@@ -8228,16 +8254,17 @@ INSERT INTO `kecamatan` (`id`, `regency_id`, `name`) VALUES
 	('950832', '9508', 'Pasir Putih');
 
 -- Dumping structure for table master.kelas
+DROP TABLE IF EXISTS `kelas`;
 CREATE TABLE IF NOT EXISTS `kelas` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `kelas` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kelas` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table master.kelas: ~5 rows (approximately)
-INSERT INTO `kelas` (`id`, `kelas`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table master.kelas: ~6 rows (approximately)
+REPLACE INTO `kelas` (`id`, `kelas`, `created_at`, `updated_at`) VALUES
 	(1, 'Kelas III', '2025-01-27 17:35:29', '2025-01-27 17:35:29'),
 	(2, 'Kelas II', '2025-01-27 17:35:32', '2025-01-27 17:35:32'),
 	(3, 'Kelas I', '2025-01-27 17:35:36', '2025-01-27 17:35:36'),
@@ -8246,25 +8273,27 @@ INSERT INTO `kelas` (`id`, `kelas`, `created_at`, `updated_at`) VALUES
 	(6, 'Non Kelas', '2025-01-27 17:38:09', '2025-01-27 17:38:09');
 
 -- Dumping structure for table master.keluarga_pasien
+DROP TABLE IF EXISTS `keluarga_pasien`;
 CREATE TABLE IF NOT EXISTS `keluarga_pasien` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `norm` int NOT NULL,
-  `nama_keluarga` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `hubungan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nomor_telepon` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `alamat` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_keluarga` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hubungan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nomor_telepon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `alamat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Dumping data for table master.keluarga_pasien: ~2 rows (approximately)
-INSERT INTO `keluarga_pasien` (`id`, `norm`, `nama_keluarga`, `hubungan`, `nomor_telepon`, `alamat`, `created_at`, `updated_at`) VALUES
+-- Dumping data for table master.keluarga_pasien: ~3 rows (approximately)
+REPLACE INTO `keluarga_pasien` (`id`, `norm`, `nama_keluarga`, `hubungan`, `nomor_telepon`, `alamat`, `created_at`, `updated_at`) VALUES
 	(1, 1, 'Kiswati', '1', '0895346480194', 'Jalan Khayangan Api No 11', '2025-02-24 08:31:44', '2025-02-24 08:31:44'),
 	(2, 1, 'Gandi Winarno', '1', '0895346480194', 'Jalan Khayangan Api No 11', '2025-02-24 08:32:10', '2025-02-24 08:32:10'),
 	(3, 1, 'Dimas', '2', '08961823687123', 'Dander', '2025-02-24 09:18:23', '2025-02-24 09:18:23');
 
 -- Dumping structure for table master.kelurahan
+DROP TABLE IF EXISTS `kelurahan`;
 CREATE TABLE IF NOT EXISTS `kelurahan` (
   `id` char(10) NOT NULL,
   `district_id` char(6) NOT NULL,
@@ -8274,8 +8303,8 @@ CREATE TABLE IF NOT EXISTS `kelurahan` (
   CONSTRAINT `fk_district` FOREIGN KEY (`district_id`) REFERENCES `kecamatan` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- Dumping data for table master.kelurahan: ~84.097 rows (approximately)
-INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
+-- Dumping data for table master.kelurahan: ~83.837 rows (approximately)
+REPLACE INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('1101012001', '110101', 'Keude Bakongan'),
 	('1101012002', '110101', 'Ujong Mangki'),
 	('1101012003', '110101', 'Ujong Padang'),
@@ -18276,7 +18305,7 @@ INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('1214092004', '121409', 'Hiliorahua'),
 	('1214092005', '121409', 'Hilimboe'),
 	('1214092006', '121409', 'Hilimboho');
-INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
+REPLACE INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('1214092008', '121409', 'Hiliwaebu'),
 	('1214092009', '121409', 'Hilidanayao'),
 	('1214092010', '121409', 'Hilizamurugo'),
@@ -28277,7 +28306,7 @@ INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('1610162004', '161016', 'Tebedak II'),
 	('1610162005', '161016', 'Tanjung lalang'),
 	('1610162006', '161016', 'Seri Kembang I');
-INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
+REPLACE INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('1610162007', '161016', 'Rengas I'),
 	('1610162008', '161016', 'Paya Besar'),
 	('1610162009', '161016', 'Rengas II'),
@@ -38278,7 +38307,7 @@ INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('3212222006', '321222', 'Cipaat'),
 	('3212222007', '321222', 'Kertamulya'),
 	('3212222008', '321222', 'Plawangan');
-INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
+REPLACE INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('3212232001', '321223', 'Anjatan'),
 	('3212232002', '321223', 'Mangunjaya'),
 	('3212232003', '321223', 'Bugis'),
@@ -48279,7 +48308,7 @@ INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('3329172006', '332917', 'Cibendung'),
 	('3329172007', '332917', 'Cibuniwangi'),
 	('3329172008', '332917', 'Cigadung');
-INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
+REPLACE INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('3329172009', '332917', 'Cihaur'),
 	('3329172010', '332917', 'Cikakak'),
 	('3329172011', '332917', 'Cikuya'),
@@ -58280,7 +58309,7 @@ INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('3603042009', '360304', 'Ancol Pasir'),
 	('3603042010', '360304', 'Pasir Barat'),
 	('3603052001', '360305', 'Cisoka');
-INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
+REPLACE INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('3603052002', '360305', 'Caringin'),
 	('3603052003', '360305', 'Selapajang'),
 	('3603052004', '360305', 'Sukatani'),
@@ -68281,7 +68310,7 @@ INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('6301112008', '630111', 'Handil Birayang Atas'),
 	('6301112009', '630111', 'Handil Birayang Bawah'),
 	('6301112010', '630111', 'Handil Maluka');
-INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
+REPLACE INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('6301112011', '630111', 'Handil Labuan Amas'),
 	('6302012001', '630201', 'Labuan Barat'),
 	('6302012002', '630201', 'Teluk Sungai'),
@@ -78282,7 +78311,7 @@ INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('7326072001', '732607', 'La\'bo\''),
 	('7326072002', '732607', 'Buntu La\'bo\''),
 	('7326072003', '732607', 'Tallung Penanian');
-INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
+REPLACE INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('7326072004', '732607', 'Pata\'padang'),
 	('7326072005', '732607', 'Tandung La\'bo\''),
 	('7326081002', '732608', 'Nonongan Utara'),
@@ -88283,7 +88312,7 @@ INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('9401132005', '940113', 'Arui'),
 	('9401142001', '940114', 'Epouwa'),
 	('9401142002', '940114', 'Dikiya');
-INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
+REPLACE INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('9401142003', '940114', 'Tagauto'),
 	('9401142004', '940114', 'Jigikebo'),
 	('9401142005', '940114', 'Jainoa'),
@@ -92047,26 +92076,27 @@ INSERT INTO `kelurahan` (`id`, `district_id`, `name`) VALUES
 	('9508322004', '950832', 'Pasir Putih');
 
 -- Dumping structure for table master.pasien
+DROP TABLE IF EXISTS `pasien`;
 CREATE TABLE IF NOT EXISTS `pasien` (
-  `id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
   `norm` int NOT NULL,
-  `gelar_depan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `gelar_belakang` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nama_lengkap` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_panggilan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gelar_depan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gelar_belakang` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_lengkap` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_panggilan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nama_ibu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tempat_lahir` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tanggal_lahir` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `jenis_kelamin` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `agama` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pekerjaan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pendidikan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nomor_telepon` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `alamat` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `provinsi` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kabupaten` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kecamatan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `kelurahan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tempat_lahir` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tanggal_lahir` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `jenis_kelamin` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `agama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pekerjaan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pendidikan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nomor_telepon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `alamat` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `provinsi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kabupaten` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kecamatan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `kelurahan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -92074,20 +92104,21 @@ CREATE TABLE IF NOT EXISTS `pasien` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table master.pasien: ~1 rows (approximately)
-INSERT INTO `pasien` (`id`, `norm`, `gelar_depan`, `gelar_belakang`, `nama_lengkap`, `nama_panggilan`, `nama_ibu`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `agama`, `pekerjaan`, `pendidikan`, `nomor_telepon`, `alamat`, `provinsi`, `kabupaten`, `kecamatan`, `kelurahan`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `pasien` (`id`, `norm`, `gelar_depan`, `gelar_belakang`, `nama_lengkap`, `nama_panggilan`, `nama_ibu`, `tempat_lahir`, `tanggal_lahir`, `jenis_kelamin`, `agama`, `pekerjaan`, `pendidikan`, `nomor_telepon`, `alamat`, `provinsi`, `kabupaten`, `kecamatan`, `kelurahan`, `created_at`, `updated_at`) VALUES
 	('9e116a19-e12c-420a-8cde-d46beaeb0e29', 1, 'dr', 'S.Kom', 'Dimas Wisnu Wirawan', 'Dimas', 'Kiswati', '3522', '2002-11-22', '2', '1', '7', '1', '0895346380194', 'Jalan Khayangan Api Nomor 11', '35', '3522', '352206', '3522062002', '2025-01-27 04:11:57', '2025-01-27 17:20:47');
 
 -- Dumping structure for table master.pekerjaan
+DROP TABLE IF EXISTS `pekerjaan`;
 CREATE TABLE IF NOT EXISTS `pekerjaan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_pekerjaan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_pekerjaan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table master.pekerjaan: ~8 rows (approximately)
-INSERT INTO `pekerjaan` (`id`, `nama_pekerjaan`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `pekerjaan` (`id`, `nama_pekerjaan`, `created_at`, `updated_at`) VALUES
 	(1, 'Presiden', '2025-01-27 02:03:25', '2025-01-27 02:03:25'),
 	(2, 'Menteri', '2025-01-27 02:03:28', '2025-01-27 02:03:28'),
 	(3, 'DPR', '2025-01-27 02:03:31', '2025-01-27 02:03:31'),
@@ -92098,16 +92129,17 @@ INSERT INTO `pekerjaan` (`id`, `nama_pekerjaan`, `created_at`, `updated_at`) VAL
 	(8, 'Petani', '2025-01-27 02:03:51', '2025-01-27 02:03:51');
 
 -- Dumping structure for table master.pekerjaan_user
+DROP TABLE IF EXISTS `pekerjaan_user`;
 CREATE TABLE IF NOT EXISTS `pekerjaan_user` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_pekerjaan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_pekerjaan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table master.pekerjaan_user: ~7 rows (approximately)
-INSERT INTO `pekerjaan_user` (`id`, `nama_pekerjaan`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `pekerjaan_user` (`id`, `nama_pekerjaan`, `created_at`, `updated_at`) VALUES
 	(1, 'Dokter', '2025-01-27 17:52:24', '2025-01-27 17:52:24'),
 	(2, 'Dokter Spesialis', '2025-01-27 17:52:28', '2025-01-27 17:52:28'),
 	(3, 'Perawat', '2025-01-27 17:52:31', '2025-01-27 17:52:31'),
@@ -92117,16 +92149,17 @@ INSERT INTO `pekerjaan_user` (`id`, `nama_pekerjaan`, `created_at`, `updated_at`
 	(7, 'Bidan', '2025-01-27 17:52:43', '2025-01-27 17:52:43');
 
 -- Dumping structure for table master.pendidikan
+DROP TABLE IF EXISTS `pendidikan`;
 CREATE TABLE IF NOT EXISTS `pendidikan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_pendidikan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_pendidikan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table master.pendidikan: ~10 rows (approximately)
-INSERT INTO `pendidikan` (`id`, `nama_pendidikan`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `pendidikan` (`id`, `nama_pendidikan`, `created_at`, `updated_at`) VALUES
 	(1, 'Sarjana III', '2025-01-27 02:04:06', '2025-01-27 02:04:06'),
 	(2, 'Sarjana II', '2025-01-27 02:04:09', '2025-01-27 02:04:53'),
 	(3, 'Sarjana I', '2025-01-27 02:04:13', '2025-01-27 02:04:13'),
@@ -92139,6 +92172,7 @@ INSERT INTO `pendidikan` (`id`, `nama_pendidikan`, `created_at`, `updated_at`) V
 	(10, 'SD', '2025-01-27 02:04:41', '2025-01-27 02:04:41');
 
 -- Dumping structure for table master.provinsi
+DROP TABLE IF EXISTS `provinsi`;
 CREATE TABLE IF NOT EXISTS `provinsi` (
   `id` char(2) NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -92146,7 +92180,7 @@ CREATE TABLE IF NOT EXISTS `provinsi` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 -- Dumping data for table master.provinsi: ~37 rows (approximately)
-INSERT INTO `provinsi` (`id`, `name`) VALUES
+REPLACE INTO `provinsi` (`id`, `name`) VALUES
 	('11', 'ACEH'),
 	('12', 'SUMATERA UTARA'),
 	('13', 'SUMATERA BARAT'),
@@ -92186,9 +92220,10 @@ INSERT INTO `provinsi` (`id`, `name`) VALUES
 	('95', 'PAPUA PEGUNUNGAN');
 
 -- Dumping structure for table master.ruangan
+DROP TABLE IF EXISTS `ruangan`;
 CREATE TABLE IF NOT EXISTS `ruangan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_ruangan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_ruangan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `kelas` tinyint NOT NULL DEFAULT '0',
   `jenis_kunjungan` tinyint NOT NULL,
   `rawat_inap` tinyint NOT NULL DEFAULT '0',
@@ -92198,16 +92233,17 @@ CREATE TABLE IF NOT EXISTS `ruangan` (
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table master.ruangan: ~4 rows (approximately)
-INSERT INTO `ruangan` (`id`, `nama_ruangan`, `kelas`, `jenis_kunjungan`, `rawat_inap`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `ruangan` (`id`, `nama_ruangan`, `kelas`, `jenis_kunjungan`, `rawat_inap`, `created_at`, `updated_at`) VALUES
 	(1, 'Poli Spesialis Anak', 6, 1, 0, '2025-01-27 17:38:22', '2025-01-27 19:23:14'),
 	(2, 'Poli Umum', 6, 1, 0, '2025-01-27 18:35:49', '2025-01-27 18:58:38'),
 	(3, 'Ruang Melati', 2, 2, 1, '2025-01-27 18:59:11', '2025-01-27 19:23:20'),
 	(4, 'Unit Gawat Darurat', 6, 3, 0, '2025-01-27 18:59:23', '2025-01-27 18:59:23');
 
 -- Dumping structure for table master.tarif
+DROP TABLE IF EXISTS `tarif`;
 CREATE TABLE IF NOT EXISTS `tarif` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_tarif` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_tarif` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tarif` int NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -92215,15 +92251,16 @@ CREATE TABLE IF NOT EXISTS `tarif` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table master.tarif: ~3 rows (approximately)
-INSERT INTO `tarif` (`id`, `nama_tarif`, `tarif`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `tarif` (`id`, `nama_tarif`, `tarif`, `created_at`, `updated_at`) VALUES
 	(1, 'Tarif Administrasi UGD', 20000, '2025-04-04 21:14:48', '2025-04-04 21:16:20'),
 	(2, 'Tarif Administrasi Poli', 25000, '2025-04-04 21:16:15', '2025-04-04 21:16:15'),
 	(3, 'Tarif Administrasi Rawat Inap', 30000, '2025-04-04 21:16:35', '2025-04-04 21:16:35');
 
 -- Dumping structure for table master.tindakan
+DROP TABLE IF EXISTS `tindakan`;
 CREATE TABLE IF NOT EXISTS `tindakan` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `nama_tindakan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_tindakan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tagihan_paramedis` int NOT NULL DEFAULT '0',
   `tagihan_dokter` int NOT NULL DEFAULT '0',
   `tagihan_sarana` int NOT NULL DEFAULT '0',
@@ -92237,7 +92274,7 @@ CREATE TABLE IF NOT EXISTS `tindakan` (
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table master.tindakan: ~6 rows (approximately)
-INSERT INTO `tindakan` (`id`, `nama_tindakan`, `tagihan_paramedis`, `tagihan_dokter`, `tagihan_sarana`, `tagihan_farmasi`, `total_tagihan`, `tagihan_oksigen`, `oksigen`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `tindakan` (`id`, `nama_tindakan`, `tagihan_paramedis`, `tagihan_dokter`, `tagihan_sarana`, `tagihan_farmasi`, `total_tagihan`, `tagihan_oksigen`, `oksigen`, `created_at`, `updated_at`) VALUES
 	(1, 'Jasa Periksa Dokter', 10000, 50000, 20000, 20000, 100000, 0, 0, '2025-01-27 20:03:27', '2025-01-27 20:03:27'),
 	(2, 'Jasa Opname', 20000, 20000, 20000, 0, 60000, 0, 0, '2025-01-27 20:04:44', '2025-01-27 20:04:44'),
 	(4, 'Oksigen /Strip', 0, 0, 0, 0, 10000, 10000, 1, '2025-01-27 20:09:36', '2025-01-27 20:09:56'),
@@ -92247,16 +92284,51 @@ INSERT INTO `tindakan` (`id`, `nama_tindakan`, `tagihan_paramedis`, `tagihan_dok
 
 
 -- Dumping database structure for pembayaran
+DROP DATABASE IF EXISTS `pembayaran`;
 CREATE DATABASE IF NOT EXISTS `pembayaran` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `pembayaran`;
 
+-- Dumping structure for table pembayaran.migrations
+DROP TABLE IF EXISTS `migrations`;
+CREATE TABLE IF NOT EXISTS `migrations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table pembayaran.migrations: ~0 rows (approximately)
+REPLACE INTO `migrations` (`id`, `migration`, `batch`) VALUES
+	(1, '2019_12_14_000001_create_personal_access_tokens_table', 1);
+
+-- Dumping structure for table pembayaran.personal_access_tokens
+DROP TABLE IF EXISTS `personal_access_tokens`;
+CREATE TABLE IF NOT EXISTS `personal_access_tokens` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_id` bigint unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dumping data for table pembayaran.personal_access_tokens: ~0 rows (approximately)
+
 -- Dumping structure for table pembayaran.tagihan
+DROP TABLE IF EXISTS `tagihan`;
 CREATE TABLE IF NOT EXISTS `tagihan` (
-  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pendaftaran_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tarif_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `tindakan_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `barang_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pendaftaran_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tarif_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tindakan_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `barang_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nominal` int DEFAULT NULL,
   `jumlah` int DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -92265,20 +92337,22 @@ CREATE TABLE IF NOT EXISTS `tagihan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table pembayaran.tagihan: ~1 rows (approximately)
-INSERT INTO `tagihan` (`id`, `pendaftaran_id`, `tarif_id`, `tindakan_id`, `barang_id`, `nominal`, `jumlah`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `tagihan` (`id`, `pendaftaran_id`, `tarif_id`, `tindakan_id`, `barang_id`, `nominal`, `jumlah`, `created_at`, `updated_at`) VALUES
 	('9e99d5e8-6440-4c20-93a6-5761d280425d', '9e99d5e8-60e6-4c21-ace1-ae12e30147f1', '2', NULL, NULL, 25000, 1, '2025-04-05 06:45:59', '2025-04-05 06:45:59');
 
 
 -- Dumping database structure for pendaftaran
+DROP DATABASE IF EXISTS `pendaftaran`;
 CREATE DATABASE IF NOT EXISTS `pendaftaran` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `pendaftaran`;
 
 -- Dumping structure for table pendaftaran.kunjungan
+DROP TABLE IF EXISTS `kunjungan`;
 CREATE TABLE IF NOT EXISTS `kunjungan` (
-  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pendaftaran_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ruangan_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `dokter_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pendaftaran_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ruangan_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `dokter_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `masuk` datetime DEFAULT NULL,
   `terima` datetime DEFAULT NULL,
   `final` datetime DEFAULT NULL,
@@ -92288,14 +92362,15 @@ CREATE TABLE IF NOT EXISTS `kunjungan` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table pendaftaran.kunjungan: ~1 rows (approximately)
-INSERT INTO `kunjungan` (`id`, `pendaftaran_id`, `ruangan_id`, `dokter_id`, `masuk`, `terima`, `final`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `kunjungan` (`id`, `pendaftaran_id`, `ruangan_id`, `dokter_id`, `masuk`, `terima`, `final`, `created_at`, `updated_at`) VALUES
 	('9e99d5e8-6301-4a5f-9416-9ce27ab41945', '9e99d5e8-60e6-4c21-ace1-ae12e30147f1', '1', '2', '2025-04-05 13:45:59', NULL, NULL, '2025-04-05 06:45:59', '2025-04-05 06:45:59');
 
 -- Dumping structure for table pendaftaran.pendaftaran
+DROP TABLE IF EXISTS `pendaftaran`;
 CREATE TABLE IF NOT EXISTS `pendaftaran` (
-  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `norm` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `pendaftar` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `norm` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pendaftar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `baru` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -92303,7 +92378,7 @@ CREATE TABLE IF NOT EXISTS `pendaftaran` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table pendaftaran.pendaftaran: ~1 rows (approximately)
-INSERT INTO `pendaftaran` (`id`, `norm`, `pendaftar`, `baru`, `created_at`, `updated_at`) VALUES
+REPLACE INTO `pendaftaran` (`id`, `norm`, `pendaftar`, `baru`, `created_at`, `updated_at`) VALUES
 	('9e99d5e8-60e6-4c21-ace1-ae12e30147f1', '1', '1', 1, '2025-04-05 06:45:59', '2025-04-05 06:45:59');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
