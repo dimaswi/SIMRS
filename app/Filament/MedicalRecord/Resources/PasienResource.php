@@ -109,13 +109,12 @@ class PasienResource extends Resource
                     }),
                 PageNavigationItem::make('Odontogram')
                     ->url(function () use ($record) {
-                        return static::getUrl('tindakan', ['record' => $record->id]);
+                        return static::getUrl('odontogram', ['record' => $record->id]);
                     })
                     ->icon('fas-tooth')
-                // ->isActiveWhen(function () {
-                //     return request()->route()->action['as'] == 'filament.RME.resources.pasiens.tindakan';
-                // })
-                ,
+                    ->isActiveWhen(function () {
+                        return request()->route()->action['as'] == 'filament.RME.resources.pasiens.odontogram';
+                    }),
                 PageNavigationItem::make('Farmasi')
                     ->url(function () use ($record) {
                         return static::getUrl('tindakan', ['record' => $record->id]);
@@ -176,10 +175,10 @@ class PasienResource extends Resource
         return [
             'index' => Pages\ListPasiens::route('/'),
             'create' => Pages\CreatePasien::route('/create'),
-            // 'edit' => Pages\EditPasien::route('/{record}/edit'),
             'pemeriksaan' => Pages\PemeriksaanPasien::route('/{record}/pemeriksaan'),
             'diagnosa' => Pages\DiagnosaPasien::route('/{record}/diagnosa'),
             'tindakan' => Pages\TindakanPasien::route('/{record}/tindakan'),
+            'odontogram' => Pages\OdontogramPasien::route('/{record}/odontogram'),
         ];
     }
 }
