@@ -52,7 +52,11 @@ class TagihanPasien extends Page implements HasForms, HasTable
                         function (Tagihan $tagihan) {
                             return 'Rp. ' . number_format($tagihan->nominal);
                         }
-                    )
+                    ),
+                TextColumn::make('created_at')
+                    ->alignCenter()
+                    ->since()
+                    ->label('Jumlah'),
             ])
             ->filters([
                 // ...

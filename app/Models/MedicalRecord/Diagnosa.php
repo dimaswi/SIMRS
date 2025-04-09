@@ -4,12 +4,13 @@ namespace App\Models\MedicalRecord;
 
 use App\Models\Master\ICD10;
 use App\Models\Pendaftaran\Kunjungan;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Diagnosa extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $connection = 'rekam_medis';
 

@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Filament\Admin\Resources;
+namespace App\Filament\Master\Resources;
 
-use App\Filament\Admin\Resources\TarifResource\Pages;
-use App\Filament\Admin\Resources\TarifResource\RelationManagers;
-use App\Models\Master\Tarif;
+use App\Filament\Master\Resources\JenisTarifResource\Pages;
+use App\Filament\Master\Resources\JenisTarifResource\RelationManagers;
+use App\Models\Master\JenisTarif;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -18,17 +17,17 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TarifResource extends Resource
+class JenisTarifResource extends Resource
 {
-    protected static ?string $model = Tarif::class;
+    protected static ?string $model = JenisTarif::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = 'Tarif';
+    protected static ?string $navigationLabel = 'Jenis Tarif';
 
-    protected static ?string $modelLabel = 'Tarif ';
+    protected static ?string $modelLabel = 'Jenis Tarif ';
 
-    protected static ?string $navigationGroup = 'Pelayanan';
+    protected static ?string $navigationGroup = 'Master';
 
     public static function form(Form $form): Form
     {
@@ -36,12 +35,8 @@ class TarifResource extends Resource
             ->schema([
                 Card::make()->schema([
                     TextInput::make('nama_tarif')
-                        ->placeholder('Masukan Nama Tarif')
-                        ->required(),
-                    TextInput::make('tarif')
-                        ->default(0)
-                        ->numeric()
-                        ->required(),
+                    ->required()
+                    ->placeholder('Masukan Nama Jenis Tarif')
                 ])
             ]);
     }
@@ -51,21 +46,15 @@ class TarifResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('index')
-                    ->alignCenter()
                     ->rowIndex()
                     ->label('No.')
+                    ->alignCenter()
                     ->extraHeaderAttributes([
                         'class' => 'w-1'
                     ]),
                 TextColumn::make('nama_tarif')
-                    ->searchable(),
-                TextColumn::make('tarif')
-                    ->badge()
-                    ->formatStateUsing(
-                        function (Tarif $tarif) {
-                            return 'Rp. ' . number_format($tarif->tarif);
-                        }
-                    )
+                    ->searchable()
+                    ->label('Nama Tarif')
             ])
             ->filters([
                 //
@@ -92,9 +81,9 @@ class TarifResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTarifs::route('/'),
-            'create' => Pages\CreateTarif::route('/create'),
-            'edit' => Pages\EditTarif::route('/{record}/edit'),
+            'index' => Pages\ListJenisTarifs::route('/'),
+            'create' => Pages\CreateJenisTarif::route('/create'),
+            'edit' => Pages\EditJenisTarif::route('/{record}/edit'),
         ];
     }
 }

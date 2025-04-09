@@ -89,9 +89,42 @@ class PendaftaranPasien extends Page implements HasForms
                     $query->where('final', null);
                 })
                 ->get();
-            $tarif_ruangan = TarifToRuangan::where('ruangan_id', $this->form->getState()['ruangan'])->with(['tarif', 'ruangan'])->first();
+            $tarif_ruangan = TarifToRuangan::where('ruangan_id', $this->form->getState()['ruangan'])->where('jenis_tarif_id', 1)->with(['tarif', 'ruangan'])->first();
 
-            if ($available_data != null || $tarif_ruangan == null) {
+            if ($available_data->count() == 0 && $tarif_ruangan != null) {
+                $dokter = DokterToRuangan::where('id', $this->form->getState()['dokter_ruangan'])->first();
+
+                DB::beginTransaction();
+                $daf = Pendaftaran::create([
+                    'norm' => $this->record->norm,
+                    'pendaftar' => auth()->user()->id,
+                    'baru' => $pendaftaran != null ? 0 : 1
+                ]);
+
+                $kunjungan = Kunjungan::create([
+                    'pendaftaran_id' => $daf->id,
+                    'ruangan_id' => $this->form->getState()['ruangan'],
+                    'dokter_id' => $dokter->user_id,
+                    'masuk' => Carbon::now('Asia/Jakarta')
+                ]);
+
+                Tagihan::create([
+                    'pendaftaran_id' => $daf->id,
+                    'kunjungan_id' => $kunjungan->id,
+                    'tarif_id' => $tarif_ruangan->id,
+                    'nominal' => $tarif_ruangan->tarif->tarif,
+                    'jumlah' => 1,
+                ]);
+                DB::commit();
+
+                Notification::make()
+                    ->title('Berhasil!')
+                    ->body($this->record->nama_lengkap . ' Berhasil didaftarkan ke ' . $ruangan->nama_ruangan)
+                    ->success()
+                    ->send();
+
+                return redirect('pendaftaran/pasiens');
+            } else {
                 if ($available_data != null) {
                     Notification::make()
                         ->title('Gagal!')
@@ -107,38 +140,6 @@ class PendaftaranPasien extends Page implements HasForms
                         ->danger()
                         ->send();
                 }
-            } else {
-                $dokter = DokterToRuangan::where('id', $this->form->getState()['dokter_ruangan'])->first();
-
-                DB::beginTransaction();
-                $daf = Pendaftaran::create([
-                    'norm' => $this->record->norm,
-                    'pendaftar' => auth()->user()->id,
-                    'baru' => $pendaftaran != null ? 0 : 1
-                ]);
-
-                Kunjungan::create([
-                    'pendaftaran_id' => $daf->id,
-                    'ruangan_id' => $this->form->getState()['ruangan'],
-                    'dokter_id' => $dokter->user_id,
-                    'masuk' => Carbon::now('Asia/Jakarta')
-                ]);
-
-                Tagihan::create([
-                    'pendaftaran_id' => $daf->id,
-                    'tarif_id' => $tarif_ruangan->tarif->id,
-                    'nominal' => $tarif_ruangan->tarif->tarif,
-                    'jumlah' => 1,
-                ]);
-                DB::commit();
-
-                Notification::make()
-                    ->title('Berhasil!')
-                    ->body($this->record->nama_lengkap . ' Berhasil didaftarkan ke ' . $ruangan->nama_ruangan)
-                    ->success()
-                    ->send();
-
-                return redirect('pendaftaran/pasiens');
             }
         } catch (\Throwable $th) {
             DB::rollBack();

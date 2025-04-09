@@ -2,12 +2,14 @@
 
 namespace App\Models\MedicalRecord;
 
+use App\Models\User;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PemeriksaanUmum extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $connection = 'rekam_medis';
 
@@ -27,7 +29,6 @@ class PemeriksaanUmum extends Model
         'frekuensi_nadi',
         'suhu',
         'saturasi_oksigen',
-        'tanggal_pemeriksaan',
         'berat_badan',
         'tinggi_badan',
         'lingkar_lengan_atas',
@@ -38,5 +39,12 @@ class PemeriksaanUmum extends Model
         'kondisi_anak',
         'pemeriksaan_ke',
         'alat_bantu_nafas',
-    ];
+        'petugas',
+        'tanggal_pemeriksaan',
+        ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'petugas');
+    }
 }

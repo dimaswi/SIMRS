@@ -9,6 +9,7 @@ use App\Models\Master\Ruangan;
 use App\Models\Master\Tarif;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Tables\Contracts\HasTable;
@@ -19,6 +20,7 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 
 class TarifRuangan extends Page implements HasForms, HasTable
 {
@@ -50,18 +52,39 @@ class TarifRuangan extends Page implements HasForms, HasTable
                 TextColumn::make('tarif.nama_tarif')
                     ->searchable()
                     ->label('Nama Tarif'),
-                    TextColumn::make('tarif.tarif')
+                TextColumn::make('tarif.tarif')
                     ->badge()
                     ->formatStateUsing(
                         function (TarifToRuangan $tarif) {
                             return 'Rp. ' . number_format($tarif->tarif->tarif);
                         }
-                    )
+                    ),
+                TextColumn::make('jenis_tarif.nama_tarif')
+                    ->searchable(),
             ])
             ->filters([
                 // ...
             ])
             ->actions([
+                EditAction::make()
+                    ->record($this->record)
+                    ->form([
+                        Select::make('tarif_id')
+                            ->label('Tarif')
+                            ->options(
+                                Tarif::all()->pluck('nama_tarif', 'id')
+                            )
+                            ->searchable()
+                            ->required(),
+                        Select::make('jenis_tarif_id')
+                            ->searchable()
+                            ->relationship(name: 'jenis_tarif', titleAttribute: 'nama_tarif')
+                            ->createOptionForm([
+                                TextInput::make('nama_tarif')
+                                    ->required()
+                                    ->placeholder('Masukan Nama Jenis Tarif'),
+                            ]),
+                    ]),
                 DeleteAction::make()
             ])
             ->bulkActions([
@@ -81,13 +104,21 @@ class TarifRuangan extends Page implements HasForms, HasTable
                             )
                             ->searchable()
                             ->required(),
+                        Select::make('jenis_tarif_id')
+                            ->searchable()
+                            ->relationship(name: 'jenis_tarif', titleAttribute: 'nama_tarif')
+                            ->createOptionForm([
+                                TextInput::make('nama_tarif')
+                                    ->required()
+                                    ->placeholder('Masukan Nama Jenis Tarif'),
+                            ]),
                     ])
                     ->action(
                         function (array $data) {
 
                             try {
 
-                                $user = TarifToRuangan::where('ruangan_id', $this->record->id)->where('tarif_id', $data['tarif_id'])->first();
+                                $user = TarifToRuangan::where('ruangan_id', $this->record->id)->where('jenis_tarif_id', $data['jenis_tarif_id'])->first();
 
                                 if ($user) {
                                     Notification::make()
@@ -99,6 +130,7 @@ class TarifRuangan extends Page implements HasForms, HasTable
                                     TarifToRuangan::create([
                                         'tarif_id' => $data['tarif_id'],
                                         'ruangan_id' => $this->record->id,
+                                        'jenis_tarif_id' => $data['jenis_tarif_id'],
                                     ]);
 
                                     Notification::make()

@@ -2,6 +2,7 @@
 
 namespace App\Models\Aplikasi;
 
+use App\Models\Master\JenisTarif;
 use App\Models\Master\Ruangan;
 use App\Models\Master\Tarif;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +19,7 @@ class TarifToRuangan extends Model
     protected $fillable = [
         'tarif_id',
         'ruangan_id',
+        'jenis_tarif_id'
     ];
 
     public function ruangan()
@@ -28,5 +30,10 @@ class TarifToRuangan extends Model
     public function tarif()
     {
         return $this->belongsTo(Tarif::class, 'tarif_id');
+    }
+
+    public function jenis_tarif()
+    {
+        return $this->belongsTo(JenisTarif::class, 'jenis_tarif_id');
     }
 }

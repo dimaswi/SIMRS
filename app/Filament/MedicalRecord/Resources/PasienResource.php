@@ -103,7 +103,7 @@ class PasienResource extends Resource
                     ->url(function () use ($record) {
                         return static::getUrl('tindakan', ['record' => $record->id]);
                     })
-                    ->icon('heroicon-o-wrench-screwdriver')
+                    ->icon('healthicons-o-stethoscope')
                     ->isActiveWhen(function () {
                         return request()->route()->action['as'] == 'filament.RME.resources.pasiens.tindakan';
                     }),

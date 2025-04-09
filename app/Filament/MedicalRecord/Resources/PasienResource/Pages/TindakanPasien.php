@@ -5,8 +5,10 @@ namespace App\Filament\MedicalRecord\Resources\PasienResource\Pages;
 use App\Filament\MedicalRecord\Resources\PasienResource;
 use App\Models\Aplikasi\TindakanToRuangan;
 use App\Models\Master\ICD10;
+use App\Models\Master\Tindakan as MasterTindakan;
 use App\Models\MedicalRecord\Diagnosa;
 use App\Models\MedicalRecord\Tindakan;
+use App\Models\Pembayaran\Tagihan;
 use App\Models\Pendaftaran\Kunjungan;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
 use Carbon\Carbon;
@@ -62,6 +64,19 @@ class TindakanPasien extends Page implements HasForms, HasTable
             ])
             ->actions([
                 DeleteAction::make()
+                    ->after(function (Tindakan $record) {
+                        try {
+                            $tagihan = Tagihan::where('tindakan_id', $record->id)->first();
+                            $tagihan->delete();
+                        } catch (\Throwable $th) {
+                            DB::rollBack();
+                            Notification::make()
+                                ->title('Gagal!')
+                                ->body($th->getMessage())
+                                ->danger()
+                                ->send();
+                        }
+                    })
             ])
             ->bulkActions([
                 // ...
@@ -90,13 +105,22 @@ class TindakanPasien extends Page implements HasForms, HasTable
                     ->action(
                         function (array $data) {
                             try {
+                                $data_tindakan = TindakanToRuangan::where('id', $data['tindakan'])->with('tindakan')->first();
                                 DB::beginTransaction();
-                                    Tindakan::create([
-                                        'kunjungan_id' => $this->record->id,
-                                        'tindakan_id' => $data['tindakan'],
-                                        'petugas' => auth()->user()->id,
-                                        'tanggal_tindakan' => Carbon::now('Asia/Jakarta'),
-                                    ]);
+                                $tindakan = Tindakan::create([
+                                    'kunjungan_id' => $this->record->id,
+                                    'tindakan_id' => $data['tindakan'],
+                                    'petugas' => auth()->user()->id,
+                                    'tanggal_tindakan' => Carbon::now('Asia/Jakarta'),
+                                ]);
+
+                                Tagihan::create([
+                                    'pendaftaran_id' => $this->record->pendaftaran_id,
+                                    'kunjungan_id' => $this->record->id,
+                                    'tindakan_id' => $tindakan->id,
+                                    'nominal' => $data_tindakan->tindakan->total_tagihan,
+                                    'jumlah' => 1
+                                ]);
                                 DB::commit();
 
                                 Notification::make()

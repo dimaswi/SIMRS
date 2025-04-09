@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::connection('rekam_medis')->create('diagnosa', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('kunjungan_id');
             $table->string('diagnosa_id');
             $table->string('keterangan');
