@@ -11,6 +11,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -29,6 +30,7 @@ class MedicalRecordPanelProvider extends PanelProvider
             ->spa()
             ->breadcrumbs(false)
             ->topNavigation()
+            ->maxContentWidth(MaxWidth::Full)
             ->login(Login::class)
             ->colors([
                 'primary' => Color::Amber,
