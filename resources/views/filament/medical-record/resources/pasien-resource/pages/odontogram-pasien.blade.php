@@ -3,8 +3,26 @@
         polygon:hover {
             fill: black;
         }
+
+        @media print {
+            body {
+                visibility: hidden;
+            }
+
+            #print {
+                visibility: visible;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%
+            }
+
+            #gmain {
+                transform: scale(1.65);
+            }
+        }
     </style>
-    <div class="flex justify-center items-center overflow-auto p-4 h-screen">
+    <div id="print" class="flex justify-center items-center overflow-auto p-4 h-screen">
         <svg version="1.1" class="w-full max-w-4xl h-full" xmlns="http://www.w3.org/2000/svg">
             <g transform="scale(2)" id="gmain">
                 @foreach ($teeth as $tooth)
@@ -201,6 +219,11 @@
                 @endforeach
             </g>
         </svg>
+    </div>
+
+
+    <div>
+        <button onclick="window.print();">Print</button>
     </div>
 
     <x-filament::modal id="odontogram-modal" width="2xl">
