@@ -7,6 +7,7 @@ use App\Models\Master\OdontogramGigi;
 use App\Models\MedicalRecord\Odontogram;
 use App\Models\Pendaftaran\Kunjungan;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
@@ -50,6 +51,50 @@ class OdontogramPasien extends Page
 
                         // Redirect ke halaman yang sama
                         return redirect()->to(url()->previous());
+                    }
+                ),
+            Action::make('print')
+                ->label('Cetak')
+                ->icon('heroicon-o-printer')
+                ->action('printOdontogram')
+                ->color('primary')
+                ->requiresConfirmation()
+                ->action(
+                    function () {
+
+                        // Ambil data kunjungan berdasarkan kunjungan_id
+                        $data_kunjungan = Kunjungan::where('id', $this->record->id)->first();
+
+                        // Ambil data odontogram berdasarkan kunjungan_id
+                        $data_odontogram = Odontogram::where('kunjungan_id', $this->record->id)->with('kondisi_gigi')->get();
+
+                        Notification::make()
+                            ->title('Berhasil')
+                            ->body('Data berhasil dicetak!')
+                            ->success()
+                            ->send();
+
+                        $pdf = Pdf::setOptions([
+                            'isHtml5ParserEnabled' => true,
+                            'isRemoteEnabled' => true,
+                        ])->setHttpContext([
+                            'ssl' => [
+                                'verify_peer' => FALSE,
+                                'verify_peer_name' => FALSE,
+                                'allow_self_signed' => TRUE,
+                            ]
+                        ])->loadView(
+                            'cetak.MedicalRecord.odontogram',
+                            [
+                                'data_kunjungan' => $data_kunjungan,
+                                'data_odontogram' => $data_odontogram,
+                                'gigi' => $this->teeth,
+                            ]
+                        );
+
+                        return response()->streamDownload(function () use ($pdf) {
+                            echo $pdf->stream();
+                        }, $this->record->id.'_odontogram.pdf');
                     }
                 ),
         ];
