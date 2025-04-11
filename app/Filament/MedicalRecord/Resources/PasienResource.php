@@ -117,12 +117,12 @@ class PasienResource extends Resource
                     }),
                 PageNavigationItem::make('Farmasi')
                     ->url(function () use ($record) {
-                        return static::getUrl('tindakan', ['record' => $record->id]);
+                        return static::getUrl('farmasi', ['record' => $record->id]);
                     })
                     ->icon('healthicons-o-pharmacy')
-                // ->isActiveWhen(function () {
-                //     return request()->route()->action['as'] == 'filament.RME.resources.pasiens.tindakan';
-                // })
+                ->isActiveWhen(function () {
+                    return request()->route()->action['as'] == 'filament.RME.resources.pasiens.farmasi' || request()->route()->action['as'] == 'filament.RME.resources.pasiens.riwayatOrderResep' || request()->route()->action['as'] == 'filament.RME.resources.pasiens.detailRiwayatOrderResep';
+                })
                 ,
                 PageNavigationItem::make('Laboratorium')
                     ->url(function () use ($record) {
@@ -179,6 +179,9 @@ class PasienResource extends Resource
             'diagnosa' => Pages\DiagnosaPasien::route('/{record}/diagnosa'),
             'tindakan' => Pages\TindakanPasien::route('/{record}/tindakan'),
             'odontogram' => Pages\OdontogramPasien::route('/{record}/odontogram'),
+            'farmasi' => Pages\FarmasiPasien::route('/{record}/farmasi'),
+            'riwayatOrderResep' => Pages\RiwayatOrderResepPasien::route('/{record}/riwayatOrderResep'),
+            'detailRiwayatOrderResep' => Pages\DetailRiwayatOrderResepPasien::route('/{record}/{orderResep}/detailRiwayatOrderResep'),
         ];
     }
 }

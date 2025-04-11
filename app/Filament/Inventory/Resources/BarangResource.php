@@ -68,36 +68,68 @@ class BarangResource extends Resource
                             ->required(),
                         Select::make('jenis')
                             ->required()
-                            ->reactive()
-                            ->options(
-                                JenisBarang::all()->pluck('nama_jenis_barang', 'id')
-                            )
-                            ->searchable()
-                            ->hint(new HtmlString('<a href="/inventory/jenis-barangs/create" target="blank">tambah <b>jenis barang</b>?</a>')),
+                            ->preload()
+                            ->relationship(name: 'jenisBarang', titleAttribute: 'nama_jenis_barang')
+                            ->createOptionForm([
+                                TextInput::make('nama_jenis_barang')
+                                    ->required()
+                                    ->label('Nama Jenis')
+                                    ->placeholder('Masukan Jenis Barang')
+                            ])
+                            // ->options(
+                            //     JenisBarang::all()->pluck('nama_jenis_barang', 'id')
+                            // )
+                            ->searchable(),
+                        // ->hint(new HtmlString('<a href="/inventory/jenis-barangs/create" target="blank">tambah <b>jenis barang</b>?</a>')),
                         Select::make('kategori')
                             ->required()
-                            ->reactive()
-                            ->options(
-                                KategoriBarang::all()->pluck('nama_kategori_barang', 'id')
-                            )
-                            ->searchable()
-                            ->hint(new HtmlString('<a href="/inventory/kategori-barangs/create" target="blank">tambah <b>kategori barang</b>?</a>')),
-                        Select::make('satuan')
-                            ->required()
-                            ->reactive()
-                            ->options(
-                                SatuanBarang::all()->pluck('nama_satuan_barang', 'id')
-                            )
-                            ->searchable()
-                            ->hint(new HtmlString('<a href="/inventory/satuan-barangs/create" target="blank">tambah <b>satuan barang</b>?</a>')),
+                            ->preload()
+                            ->relationship(name: 'KategoriBarang', titleAttribute: 'nama_kategori_barang')
+                            ->createOptionForm([
+                                TextInput::make('nama_kategori_barang')
+                                    ->required()
+                                    ->label('Nama Kategori')
+                                    ->placeholder('Masukan Kategori Barang')
+                            ])
+                            // ->options(
+                            //     KategoriBarang::all()->pluck('nama_kategori_barang', 'id')
+                            // )
+                            ->searchable(),
+                        // ->hint(new HtmlString('<a href="/inventory/kategori-barangs/create" target="blank">tambah <b>kategori barang</b>?</a>')),
                         Select::make('vendor')
                             ->required()
-                            ->reactive()
-                            ->options(
-                                VendorBarang::all()->pluck('nama_vendor', 'id')
-                            )
-                            ->searchable()
-                            ->hint(new HtmlString('<a href="/inventory/vendor-barangs/create" target="blank">tambah <b>vendor barang</b>?</a>')),
+                            ->preload()
+                            ->relationship(name: 'vendorBarang', titleAttribute: 'nama_vendor')
+                            ->createOptionForm([
+                                TextInput::make('nama_vendor')
+                                    ->required()
+                                    ->placeholder('Nama Vendor Barang'),
+                                TextInput::make('alamat')
+                                    ->required()
+                                    ->placeholder('Alamat Vendor Barang'),
+                                TextInput::make('nomor_telefon')
+                                    ->placeholder('Telefon Vendor Barang'),
+                            ])
+                            // ->options(
+                            //     SatuanBarang::all()->pluck('nama_satuan_barang', 'id')
+                            // )
+                            ->searchable(),
+                        // ->hint(new HtmlString('<a href="/inventory/satuan-barangs/create" target="blank">tambah <b>satuan barang</b>?</a>')),
+                        Select::make('satuan')
+                            ->required()
+                            ->preload()
+                            ->relationship(name: 'satuanBarang', titleAttribute: 'nama_satuan_barang')
+                            ->createOptionForm([
+                                TextInput::make('nama_satuan_barang')
+                                    ->required()
+                                    ->label('Nama Satuan')
+                                    ->placeholder('Masukan Satuan Barang')
+                            ])
+                            // ->options(
+                            //     VendorBarang::all()->pluck('nama_vendor', 'id')
+                            // )
+                            ->searchable(),
+                        // ->hint(new HtmlString('<a href="/inventory/vendor-barangs/create" target="blank">tambah <b>vendor barang</b>?</a>')),
                         TextInput::make('generik')
                             ->placeholder('Generik Barang'),
                         Select::make('jenis_penggunaan')
