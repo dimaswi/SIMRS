@@ -4,16 +4,25 @@ namespace App\Filament\MedicalRecord\Resources\PasienResource\Pages;
 
 use App\Filament\MedicalRecord\Resources\PasienResource;
 use App\Models\Master\OdontogramGigi;
+use App\Models\Master\Pasien;
 use App\Models\MedicalRecord\Odontogram;
+use App\Models\MedicalRecord\OdontogramDetail;
 use App\Models\Pendaftaran\Kunjungan;
+use App\Models\Pendaftaran\Pendaftaran;
 use AymanAlhattami\FilamentPageWithSidebar\Traits\HasPageSidebar;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Filament\Actions\Action;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 
-class OdontogramPasien extends Page
+class OdontogramPasien extends Page implements HasForms
 {
+    use InteractsWithForms;
+
     protected static string $resource = PasienResource::class;
 
     protected static string $view = 'filament.medical-record.resources.pasien-resource.pages.odontogram-pasien';
@@ -30,79 +39,33 @@ class OdontogramPasien extends Page
     public $master_kondisi;
     public $kondisi = 1;
     public $tindakan;
-
-    protected function getHeaderActions(): array
-    {
-        return [
-            Action::make('reset')
-                ->label('Hapus Semua')
-                ->icon('heroicon-o-arrow-path')
-                ->action('resetOdontogram')
-                ->color('danger')
-                ->requiresConfirmation()
-                ->action(
-                    function () {
-                        Odontogram::where('kunjungan_id', $this->record->id)->delete();
-                        Notification::make()
-                            ->title('Berhasil')
-                            ->body('Data berhasil dihapus!')
-                            ->success()
-                            ->send();
-
-                        // Redirect ke halaman yang sama
-                        return redirect()->to(url()->previous());
-                    }
-                ),
-            Action::make('print')
-                ->label('Cetak')
-                ->icon('heroicon-o-printer')
-                ->action('printOdontogram')
-                ->color('primary')
-                ->requiresConfirmation()
-                ->action(
-                    function () {
-
-                        // Ambil data kunjungan berdasarkan kunjungan_id
-                        $data_kunjungan = Kunjungan::where('id', $this->record->id)->first();
-
-                        // Ambil data odontogram berdasarkan kunjungan_id
-                        $data_odontogram = Odontogram::where('kunjungan_id', $this->record->id)->with('kondisi_gigi')->get();
-
-                        Notification::make()
-                            ->title('Berhasil')
-                            ->body('Data berhasil dicetak!')
-                            ->success()
-                            ->send();
-
-                        $pdf = Pdf::setOptions([
-                            'isHtml5ParserEnabled' => true,
-                            'isRemoteEnabled' => true,
-                        ])->setHttpContext([
-                            'ssl' => [
-                                'verify_peer' => FALSE,
-                                'verify_peer_name' => FALSE,
-                                'allow_self_signed' => TRUE,
-                            ]
-                        ])->loadView(
-                            'cetak.MedicalRecord.odontogram',
-                            [
-                                'data_kunjungan' => $data_kunjungan,
-                                'data_odontogram' => $data_odontogram,
-                                'gigi' => $this->teeth,
-                            ]
-                        );
-
-                        return response()->streamDownload(function () use ($pdf) {
-                            echo $pdf->stream();
-                        }, $this->record->id.'_odontogram.pdf');
-                    }
-                ),
-        ];
-    }
+    public $dataPasien;
+    public $odontogramDetail;
+    public ?array $data = [];
 
     public function mount()
     {
+        $this->form->fill();
         $data_odontogram = Odontogram::where('kunjungan_id', $this->record->id)->with('kondisi_gigi')->get();
+        $pendaftaran  = Pendaftaran::where('id', $this->record->pendaftaran_id)->first();
+        $pasien = Pasien::where('norm', $pendaftaran->norm)->first();
+        $this->dataPasien = $pasien;
+
+        // Mengambil data dari Odontogram berdasarkan kunjungan_id
+        $odontogram_detail = OdontogramDetail::where('kunjungan_id', $this->record->id)->first();
+        if ($odontogram_detail) {
+            $this->odontogramDetail = $odontogram_detail;
+            $this->form->fill([
+                'occlusi' => $odontogram_detail->occlusi,
+                'torus_platinus' => $odontogram_detail->torus_platinus,
+                'torus_mandibularis' => $odontogram_detail->torus_mandibularis,
+                'palatum' => $odontogram_detail->palatum,
+                'check_diastema' => $odontogram_detail->diastema != 'Tidak Ada' ? 'Ada' : 'Tidak Ada',
+                'check_anomali' => $odontogram_detail->anomali != 'Tidak Ada' ? 'Ada' : 'Tidak Ada',
+                'diastema' => $odontogram_detail->diastema,
+                'anomali' => $odontogram_detail->anomali,
+            ]);
+        }
 
         // Data baru dari $data_odontogram
         $newTeethData = [];
@@ -462,6 +425,156 @@ class OdontogramPasien extends Page
         } catch (\Throwable $th) {
             Notification::make()
                 ->title('Gagal')
+                ->body($th->getMessage())
+                ->danger()
+                ->send();
+        }
+    }
+
+    public function hapus_semua()
+    {
+        Odontogram::where('kunjungan_id', $this->record->id)->delete();
+        OdontogramDetail::where('kunjungan_id', $this->record->id)->delete();
+        Notification::make()
+            ->title('Berhasil')
+            ->body('Data berhasil dihapus!')
+            ->success()
+            ->send();
+
+        // Redirect ke halaman yang sama
+        return redirect()->to(url()->previous());
+    }
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Card::make()->schema([
+                    Radio::make('occlusi')
+                        ->label('Occlusi')
+                        ->options([
+                            'Normal Bite' => 'Normal Bite',
+                            'Cross Bite' => 'Cross Bite',
+                            'Steep Bite' => 'Steep Bite'
+                        ])
+                        ->default('Normal Bite')
+                        ->inline(),
+                    Radio::make('torus_platinus')
+                        ->label('Torus Platinus')
+                        ->options([
+                            'Tidak Ada' => 'Tidak Ada',
+                            'Kecil' => 'Kecil',
+                            'Sedang' => 'Sedang',
+                            'Besar' => 'Besar',
+                            'Multiple' => 'Multiple',
+                        ])
+                        ->default('Tidak Ada')
+                        ->inline(),
+                    Radio::make('torus_mandibularis')
+                        ->label('Torus Mandibularis')
+                        ->options([
+                            'Tidak Ada' => 'Tidak Ada',
+                            'Sisi Kiri' => 'Sisi Kiri',
+                            'Sisi Kanan' => 'Sisi Kanan',
+                            'Kedua Sisi' => 'Kedua Sisi',
+                        ])
+                        ->default('Tidak Ada')
+                        ->inline(),
+                    Radio::make('palatum')
+                        ->label('Palatum')
+                        ->options([
+                            'Dalam' => 'Dalam',
+                            'Sedang' => 'Sedang',
+                            'Rendah' => 'Rendah'
+                        ])
+                        ->default('Dalam')
+                        ->inline(),
+                    Radio::make('check_diastema')
+                        ->label('Diastema')
+                        ->options([
+                            'Tidak Ada' => 'Tidak Ada',
+                            'Ada' => 'Ada',
+                        ])
+                        ->default('Tidak Ada')
+                        ->inline()
+                        ->live(),
+                    TextInput::make('diastema')
+                        ->label(' ')
+                        ->visible(fn($get) => $get('check_diastema') === 'Ada'),
+                    Radio::make('check_anomali')
+                        ->label('Anomali')
+                        ->options([
+                            'Tidak Ada' => 'Tidak Ada',
+                            'Ada' => 'Ada',
+                        ])
+                        ->default('Tidak Ada')
+                        ->inline()
+                        ->live(),
+                    TextInput::make('anomali')
+                        ->label(' ')
+                        ->visible(fn($get) => $get('check_anomali') === 'Ada')
+                ])
+            ])
+            ->statePath('data');
+    }
+
+    public function create()
+    {
+        try {
+            $data = $this->form->getState();
+
+            // Periksa apakah data sudah ada
+            $existingRecord = OdontogramDetail::where('kunjungan_id', $this->record->id)->first();
+            if ($existingRecord) {
+                $existingRecord->update([
+                    'kunjungan_id' => $this->record->id,
+                    'occlusi' => $data['occlusi'],
+                    'torus_platinus' => $data['torus_platinus'],
+                    'torus_mandibularis' => $data['torus_mandibularis'],
+                    'palatum' => $data['palatum'],
+                    'diastema' => $data['check_diastema'] == 'Ada' ? $data['diastema'] : 'Tidak Ada',
+                    'anomali' => $data['check_anomali'] == 'Ada' ? $data['anomali'] : 'Tidak Ada',
+                ]);
+
+                Notification::make()
+                    ->title('Berhasil')
+                    ->body('Data berhasil diupdate!')
+                    ->success()
+                    ->send();
+
+                return redirect()->to(url()->previous());
+                // Hentikan proses jika data sudah ada
+            }
+            // Jika data belum ada, buat data baru
+            // Periksa apakah ada data yang diisi
+            if (empty($data['occlusi']) && empty($data['torus_platinus']) && empty($data['torus_mandibularis']) && empty($data['palatum']) && empty($data['diastema']) && empty($data['anomali'])) {
+                Notification::make()
+                    ->title('Gagal')
+                    ->body('Silahkan isi data terlebih dahulu')
+                    ->danger()
+                    ->send();
+                return; // Hentikan proses jika tidak ada data yang diisi
+            }
+
+            OdontogramDetail::create([
+                'kunjungan_id' => $this->record->id,
+                'occlusi' => $data['occlusi'],
+                'torus_platinus' => $data['torus_platinus'],
+                'torus_mandibularis' => $data['torus_mandibularis'],
+                'palatum' => $data['palatum'],
+                'diastema' => $data['check_diastema'] == 'Ada' ? $data['diastema'] : 'Tidak Ada',
+                'anomali' => $data['check_anomali'] == 'Ada' ? $data['anomali'] : 'Tidak Ada',
+            ]);
+            Notification::make()
+                ->title('Success')
+                ->body('Data Berhasil Dibuat!')
+                ->success()
+                ->send();
+
+            return redirect()->to(url()->previous());
+        } catch (\Throwable $th) {
+            Notification::make()
+                ->title('Error')
                 ->body($th->getMessage())
                 ->danger()
                 ->send();

@@ -1,7 +1,15 @@
 <x-filament-panels::page>
+    @php
+        setlocale(LC_ALL, 'IND');
+    @endphp
     <style>
         polygon:hover {
             fill: black;
+        }
+
+        .kop {
+            visibility: hidden;
+            display: none;
         }
 
         @media print {
@@ -18,15 +26,78 @@
             }
 
             #gmain {
-                transform: scale(1.65);
+                transform: scale(1.77);
             }
+
+            #button-print {
+                display: none;
+            }
+
+            .kop {
+                visibility: visible;
+                display: block;
+                table-layout: fixed;
+            }
+
+            svg {
+                border-right: solid 1px black;
+                border-left: solid 1px black;
+                border-bottom: solid 1px black;
+            }
+
+            #form {
+                display: none;
+            }
+
         }
     </style>
-    <div id="print" class="flex justify-center items-center overflow-auto p-4 h-screen">
-        <svg version="1.1" class="w-full max-w-4xl h-full" xmlns="http://www.w3.org/2000/svg">
-            <g transform="scale(2)" id="gmain">
+
+    <div id="print" class="h-full">
+        <div id="button-print">
+            <x-filament::button icon="heroicon-m-trash" color="danger" wire:click="hapus_semua">
+                Hapus Semua
+            </x-filament::button>
+            <x-filament::button icon="heroicon-m-printer" color="warning" onclick="window.print()">
+                Print
+            </x-filament::button>
+        </div>
+
+
+        <table class="kop" style="border: solid 1px black;">
+            <tr>
+                <td>
+                    <center>
+                        <img src="{{ url('/kop.png') }}" alt="" style="width: 100%">
+                    </center>
+                </td>
+            </tr>
+        </table>
+
+
+        <div class="kop">
+            <div style="width:50%; float:left; border-left: 1px solid black; border-bottom: 1px solid black;">
+                <div class="px-2">
+                    <b>Nama</b> : {{ $dataPasien->nama_lengkap }}
+                </div>
+                <div class="px-2">
+                    <b>NIK</b> : .....
+                </div>
+            </div>
+
+            <div style="width: 50%; float:right; border-right: 1px solid black; border-bottom: 1px solid black;">
+                <div class="px-2">
+                    <b>Tanggal</b> : {{ \Carbon\Carbon::parse($record->created_at)->formatLocalized('%A, %d %B %Y') }}
+                </div>
+                <div class="px-2">
+                    <b>Kunjungan</b> : {{ $record->ruangan->nama_ruangan }}
+                </div>
+            </div>
+        </div>
+
+        <svg version="1.1" style="width: 100%; height: 410px; " xmlns="http://www.w3.org/2000/svg">
+            <g transform="scale(2)" id="gmain" style="">
                 @foreach ($teeth as $tooth)
-                    <g id="P{{ $tooth['number'] }}" transform="{{ $tooth['transform'] }}" style="padding-top: 100px">
+                    <g id="P{{ $tooth['number'] }}" transform="{{ $tooth['transform'] }}">
                         <!-- Tambahkan teks di atas poligon -->
                         @if (collect($tooth['kondisi'])->contains('non'))
                             <text x="3" y="-2" stroke="navy" fill="black" stroke-width="0.1"
@@ -219,11 +290,197 @@
                 @endforeach
             </g>
         </svg>
-    </div>
 
+        <div class="kop">
+            <table style="border-collapse: collapse; width: 100%; ">
+                @if ($odontogramDetail)
+                    <tr>
+                        <td style=" width:30%; padding-left:20px ; border-left: solid 1px black; ">
+                            Occlusi
+                        </td>
+                        <td style="border-right: solid 1px black;">
+                            @if ($odontogramDetail->occlusi === 'Normal Bite')
+                                Normal Bite/<s>Cross Bite</s>/<s>Steep Bite</s>
+                            @elseif ($odontogramDetail->occlusi === 'Cross Bite')
+                                <s>Normal Bite</s>/Cross Bite/<s>Steep Bite</s>
+                            @elseif ($odontogramDetail->occlusi === 'Steep Bite')
+                                <s>Normal Bite</s>/<s>Cross Bite</s>/Steep Bite
+                            @else
+                                Normal Bite/Cross Bite/Steep Bite
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" width:30%; padding-left:20px ; border-left: solid 1px black; ">
+                            Torus Platinus
+                        </td>
+                        <td style="border-right: solid 1px black;">
+                            @if ($odontogramDetail->torus_platinus === 'Tidak Ada')
+                                Tidak Ada/<s>Kecil</s>/<s>Sedang</s>/<s>Besar</s>/<s>Multiple</s>
+                            @elseif ($odontogramDetail->torus_platinus === 'Kecil')
+                                <s>Tidak Ada</s>/Kecil/<s>Sedang</s>/<s>Besar</s>/<s>Multiple</s>
+                            @elseif ($odontogramDetail->torus_platinus === 'Sedang')
+                                <s>Tidak Ada</s>/<s>Kecil</s>/Sedang/<s>Besar</s>/<s>Multiple</s>
+                            @elseif ($odontogramDetail->torus_platinus === 'Besar')
+                                <s>Tidak Ada</s>/<s>Kecil</s>/<s>Sedang</s>/Besar/<s>Multiple</s>
+                            @elseif ($odontogramDetail->torus_platinus === 'Multiple')
+                                <s>Tidak Ada</s>/<s>Kecil</s>/<s>Sedang</s>/<s>Besar</s>/Multiple
+                            @else
+                                Tidak Ada/Kecil/Sedang/Besar/Multiple
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" width:30%; padding-left:20px ; border-left: solid 1px black; ">
+                            Torus Mandibularis
+                        </td>
+                        <td style="border-right: solid 1px black;">
+                            @if ($odontogramDetail->torus_mandibularis === 'Tidak Ada')
+                                Tidak Ada/<s>Sisi Kiri</s>/<s>Sisi Kanan</s>/<s>Kedua Sisi</s>
+                            @elseif ($odontogramDetail->torus_mandibularis === 'Sisi Kiri')
+                                <s>Tidak Ada</s>/Sisi Kiri/<s>Sisi Kanan</s>/<s>Kedua Sisi</s>
+                            @elseif ($odontogramDetail->torus_mandibularis === 'Sisi Kanan')
+                                <s>Tidak Ada</s>/<s>Sisi Kiri</s>/Sisi Kanan/<s>Kedua Sisi</s>
+                            @elseif ($odontogramDetail->torus_mandibularis === 'Kedua Sisi')
+                                <s>Tidak Ada</s>/<s>Sisi Kiri</s>/<s>Sisi Kanan</s>/Kedua Sisi
+                            @else
+                                Tidak Ada/Sisi Kiri/Sisi Kanan/Kedua Sisi
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" width:30%; padding-left:20px ; border-left: solid 1px black; ">
+                            Palatum
+                        </td>
+                        <td style="border-right: solid 1px black;">
+                            @if ($odontogramDetail->palatum === 'Dalam')
+                                Dalam/<s>Sedang</s>/<s>Rendah</s>
+                            @elseif ($odontogramDetail->palatum === 'Sedang')
+                                <s>Dalam</s>/Sedang/<s>Rendah</s>
+                            @elseif ($odontogramDetail->palatum === 'Rendah')
+                                <s>Dalam</s>/<s>Sedang</s>/Rendah
+                            @else
+                                Dalam/Sedang/Rendah
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" width:30%; padding-left:20px ; border-left: solid 1px black; ">
+                            Diastema
+                        </td>
+                        <td style="border-right: solid 1px black;">
+                            @if ($odontogramDetail->diastema === 'Tidak Ada')
+                                Tidak Ada/<s>Ada</s>
+                            @elseif ($odontogramDetail->diastema !== 'Tidak Ada')
+                                <s>Tidak Ada</s>/Ada : {{ $odontogramDetail->diastema }}
+                            @else
+                                Tidak Ada/Ada
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td
+                            style=" width:30%; padding-left:20px ; border-left: solid 1px black;border-bottom: solid 1px black;">
+                            Anomali
+                        </td>
+                        <td style="border-right: solid 1px black; border-bottom: solid 1px black;">
+                            @if ($odontogramDetail->anomali === 'Tidak Ada')
+                                Tidak Ada/<s>Ada</s>
+                            @elseif ($odontogramDetail->anomali !== 'Tidak Ada')
+                                <s>Tidak Ada</s>/Ada : {{ $odontogramDetail->anomali }}
+                            @else
+                                Tidak Ada/Ada
+                            @endif
+                        </td>
+                    </tr>
+                @else
+                    <tr>
+                        <td style=" width:30%; padding-left:20px ; border-left: solid 1px black; ">
+                            Occlusi
+                        </td>
+                        <td style="border-right: solid 1px black;">
+                            Normal Bite/Cross Bite/Steep Bite
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" width:30%; padding-left:20px ; border-left: solid 1px black; ">
+                            Torus Platinus
+                        </td>
+                        <td style="border-right: solid 1px black;">
+                            Tidak Ada/Kecil/Sedang/Besar/Multiple
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" width:30%; padding-left:20px ; border-left: solid 1px black; ">
+                            Torus Mandibularis
+                        </td>
+                        <td style="border-right: solid 1px black;">
+                            Tidak Ada/Sisi Kiri/Sisi Kanan/Kedua Sisi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" width:30%; padding-left:20px ; border-left: solid 1px black; ">
+                            Palatum
+                        </td>
+                        <td style="border-right: solid 1px black;">
+                            Dalam/Sedang/Rendah
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style=" width:30%; padding-left:20px ; border-left: solid 1px black; ">
+                            Diastema
+                        </td>
+                        <td style="border-right: solid 1px black;">
+                            Tidak Ada/Ada
+                        </td>
+                    </tr>
+                    <tr>
+                        <td
+                            style=" width:30%; padding-left:20px ; border-left: solid 1px black;border-bottom: solid 1px black;">
+                            Anomali
+                        </td>
+                        <td style="border-right: solid 1px black; border-bottom: solid 1px black;">
+                            Tidak Ada/Ada
+                        </td>
+                    </tr>
+                @endif
 
-    <div>
-        <button onclick="window.print();">Print</button>
+            </table>
+        </div>
+
+        <div class="kop">
+            <table style="border-collapse: collapse; width: 100%; border: solid 1px black;">
+                <tr>
+                    <td style="width: 50%"><center></center></td>
+                    <td style="width: 50%"><center>Tanda Tangan Dokter</center></td>
+                </tr>
+                <tr>
+                    <td><br></td>
+                    <td><br></td>
+                </tr>
+                <tr>
+                    <td><br></td>
+                    <td><br></td>
+                </tr>
+                <tr>
+                    <td><br></td>
+                    <td><br></td>
+                </tr>
+                <tr>
+                    <td style="width: 50%"><center></center></td>
+                    <td style="width: 50%"><center>Dokter Pemeriksa</center></td>
+                </tr>
+            </table>
+        </div>
+
+        <form id="form" wire:submit="create">
+            {{ $this->form }}
+            <br>
+            <x-filament::button size="lg" color="success" type="submit">
+                Simpan
+            </x-filament::button>
+        </form>
+
     </div>
 
     <x-filament::modal id="odontogram-modal" width="2xl">
